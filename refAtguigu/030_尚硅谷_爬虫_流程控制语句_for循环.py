@@ -1,8 +1,10 @@
 # 循环字符串
 # range(5)
 # range(1,6)
-# range(1,10,3)
+range(1, 10, 3)
 # 循环一个列表
+for i in range(10, 0, -1):
+    print(i)
 
 
 # 一个一个的输出 叫做循环 也叫做遍历
@@ -43,7 +45,7 @@
 
 # 应用场景  会爬取一个列表返回给我们
 # 循环一个列表
-a_list = ['周杰伦','林俊杰','陶喆','庞龙']
+a_list = ['周杰伦', '林俊杰', '陶喆', '庞龙']
 
 # 遍历列表中的元素
 # for i in a_list:
@@ -54,5 +56,5 @@ a_list = ['周杰伦','林俊杰','陶喆','庞龙']
 # 判断列表中的元素的个数
 # print(len(a_list))
 # 0 1 2
-for i in  range(len(a_list)):
-    print(i)
+# for i in  range(len(a_list)):
+#     print(i)

@@ -18,7 +18,7 @@
 # print(b_list)
 
 
-c_list = [1,2,3,4,5]
+c_list = [1,2,3,3,4,5]
 print(c_list)
 
 # 根据元素来删除列表中的数据

@@ -19,8 +19,10 @@ print(char_list)
 num_list = [1,2,3]
 num1_list = [4,5,6]
 
+num1_list.extend(num_list)
 num_list.extend(num1_list)
 print(num_list)
+print(num1_list)
 
 
 
