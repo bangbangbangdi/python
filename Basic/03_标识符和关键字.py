@@ -3,7 +3,11 @@
 # 3. 不能使用关键字。
 
 
+
 # 大驼峰 小驼峰 命名法   下划线
+# 大驼峰 mygender MyGender --> class
+# 小驼峰 mygender myGender --> method
+# 下划线 mygender my_gender
 
 # 常见的关键字 了解即可
 

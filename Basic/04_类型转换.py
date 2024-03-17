@@ -28,7 +28,7 @@
 # 以下 如果字符串当中包含了非法的字符 则报错
 # a = '1.23'
 # print(type(a))
-# b = int(a)
+# b = int(float(a))
 # print(b)
 
 # a = '12ab'
@@ -45,13 +45,19 @@
 # print(type(b))
 
 
-a = 666
-print(a)
-print(type(a))
+# a = 666
+# print(a)
+# print(type(a))
+#
+# b = float(a)
+# print(b)
+# print(type(b))
 
-b = float(a)
-print(b)
-print(type(b))
+# b = True
+# b = float(b)
+# print(b)
+# print(type(b))
+
 # -------------------------------- 转换为字符串 --------------------------------
 # 整数转换为字符串
 # a = 80
@@ -190,10 +196,10 @@ print(type(b))
 # print(type(b))
 
 # 什么情况下是False
-print(bool(0))
-print(bool(0.0))
-print(bool(''))
-print(bool(""))
-print(bool([]))
-print(bool(()))
-print(bool({}))
+# print(bool(0))
+# print(bool(0.0))
+# print(bool(''))
+# print(bool(""))
+# print(bool([]))
+# print(bool(()))
+# print(bool({}))
