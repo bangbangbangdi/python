@@ -11,7 +11,8 @@ import random
 按下列规则模拟21点扑克牌游戏：
 计算机人工智能AI作为庄家(House)，用户作为玩家(Player) 。
 
-游戏开始时， 庄家从洗好的一副牌中发牌：第1张牌发给玩家， 第2张牌发给庄家，第3张牌发给玩家，第4张牌发给庄家。
+游戏开始时， 庄家从洗好的一副牌中发牌：
+玩家、庄家各抓两张牌
 然后，询问玩家是否需要继续“拿牌”，通过一次或多次“拿牌”，玩家尝试使手中扑克牌的点数和接近21。
 如果玩家手中扑克牌的点数之和超过21，则玩家输牌。
 当玩家决定 “停牌”(即，不再“拿牌”)
@@ -64,6 +65,7 @@ class Poker:
                       for face in range(1, 14)]
         """记录当前要发的牌的索引"""
         self.current = 0
+        self.shuffle()
 
     """洗牌"""
 
@@ -94,13 +96,17 @@ class Player:
         """玩家手牌"""
         self.cards = []
 
-    def get_card(self, card):
-        """拿一张牌,加入到手牌中"""
-        self.cards.append(card)
+    def get_card(self, poker, size):
+        """拿size张牌,加入到手牌中,并返回最后一张牌"""
+        card = None
+        for _ in range(size):
+            card = poker.deal()
+            self.cards.append(card)
+        return card
 
     def show_card(self):
         """展示自己的手牌"""
-        print(self.cards)
+        print(f'{self.name}手牌为:{self.cards}')
 
 
 # -------------------- 游戏逻辑 --------------------
@@ -129,12 +135,12 @@ def is_blackjack(cards: list[Card]) -> bool:
 
 def get_count(cards: list[Card]) -> int:
     """
-    根据手牌判断得分,如果是blackjack则返回22分
+    根据手牌判断得分
     :param cards: 手牌列表
     :return: 手牌对应的得分
     """
     if is_blackjack(cards):
-        return 22
+        return 21
     count = 0
     for card in cards:
         count += card.face
@@ -159,3 +165,74 @@ def winner(p1: Player, p2: Player) -> int:
         return 1
     else:
         return 2
+
+
+def game_init(poker: Poker) -> list[Player]:
+    """
+    游戏初始化
+    :return: 返回玩家列表,其中第一个元素为玩家,第二个元素为庄家
+    """
+    print("欢迎来到21点！")
+    name = input("怎么称呼?") or 'bang'
+    player = Player(name)
+    banker = Player("庄家")
+    player.get_card(poker, 2)
+    banker.get_card(poker, 2)
+    player.show_card()
+    banker.show_card()
+    return [player, banker]
+
+
+def player_loop(poker: Poker, player: Player):
+    """
+    玩家抓牌循环
+    :param poker:
+    :param player:
+    :return:
+    """
+    while True:
+        """这里后面的 or 代表默认值,以后会讲到"""
+        count = get_count(player.cards)
+        answer = input(f'{player.name},您当前的分数为{count},要继续抓牌嘛?y/n') or 'y'
+        if answer.lower() == 'y':
+            """抓一张牌"""
+            card = player.get_card(poker, 1)
+            print(f'您抓到的牌是{card}')
+            player.show_card()
+            count = get_count(player.cards)
+            if count > 21:
+                print(f'抱歉...您当前分数为{count},庄家获胜')
+                return
+        else:
+            break
+
+
+def main():
+    """
+    游戏主循环
+    :return:
+    """
+    poker = Poker()
+    player, banker = game_init(poker)
+    """玩家抓牌循环"""
+    """庄家抓牌循环"""
+    while True:
+        """庄家抓牌逻辑为 < 17 就抓"""
+        count = get_count(banker.cards)
+        print(f'庄家当前分数为{count}')
+        if count < 17:
+            card = banker.get_card(poker, 1)
+            print(f'庄家抓到的牌是{card}')
+            banker.show_card()
+            count = get_count(banker.cards)
+            if count > 21:
+                print(f'庄家分数为{count},玩家获胜')
+                return
+        else:
+            break
+    """判断获胜"""
+
+
+if __name__ == '__main__':
+    main()
+    pass
