@@ -150,21 +150,33 @@ def get_count(cards: list[Card]) -> int:
 # cs = [Card(Suite.HEART, 10), Card(Suite.SPADE, 11)]
 # print(get_count(cs))
 
-def winner(p1: Player, p2: Player) -> int:
+def winner(p1: Player, p2: Player):
     """
     判断输赢 - 这个有个潜台词,即能来到这一步的双方手牌分数均不超过21点
     :param p1: 玩家1
     :param p2: 玩家2
-    :return: 获胜的玩家 0-平局; 1-玩家1获胜; 2-玩家2获胜
+    :return: 获胜的玩家 0-None; 1-玩家1获胜; 2-玩家2获胜
     """
     cards1 = p1.cards
     cards2 = p2.cards
+
+    p1.show_card()
+    p2.show_card()
+    """我们先来纠结一下是否有人是blackjack的情况"""
+    if is_blackjack(cards1) and is_blackjack(cards2):
+        print('两位神仙都是blackjack,这把平局')
+    elif is_blackjack(cards1):
+        print(f'{p1.name}获胜')
+    elif is_blackjack(cards2):
+        print(f'{p2.name}获胜')
+
+    """都不是blackjack的情况下"""
     if get_count(cards1) == get_count(cards2):
-        return 0
+        print(f'{p1.name}分数为:{get_count(p1.cards)} ; {p2.name}分数为:{get_count(p2.cards)}.平局')
     elif get_count(cards1) > get_count(cards2):
-        return 1
+        print(f'{p1.name}分数为:{get_count(p1.cards)} ; {p2.name}分数为:{get_count(p2.cards)}.{p1.name}获胜')
     else:
-        return 2
+        print(f'{p1.name}分数为:{get_count(p1.cards)} ; {p2.name}分数为:{get_count(p2.cards)}.{p2.name}获胜')
 
 
 def game_init(poker: Poker) -> list[Player]:
@@ -191,8 +203,8 @@ def player_loop(poker: Poker, player: Player):
     :return:
     """
     while True:
-        """这里后面的 or 代表默认值,以后会讲到"""
         count = get_count(player.cards)
+        """这里后面的 or 是逻辑运算符的另一个种用法,以后会讲到"""
         answer = input(f'{player.name},您当前的分数为{count},要继续抓牌嘛?y/n') or 'y'
         if answer.lower() == 'y':
             """抓一张牌"""
@@ -204,18 +216,16 @@ def player_loop(poker: Poker, player: Player):
                 print(f'抱歉...您当前分数为{count},庄家获胜')
                 return
         else:
-            break
+            return
 
 
-def main():
+def bank_loop(poker: Poker, banker: Player):
     """
-    游戏主循环
+    庄家抓牌循环
+    :param poker:
+    :param banker:
     :return:
     """
-    poker = Poker()
-    player, banker = game_init(poker)
-    """玩家抓牌循环"""
-    """庄家抓牌循环"""
     while True:
         """庄家抓牌逻辑为 < 17 就抓"""
         count = get_count(banker.cards)
@@ -230,9 +240,27 @@ def main():
                 return
         else:
             break
+
+
+def main():
+    """
+    游戏主循环
+    :return:
+    """
+    """游戏初始化"""
+    poker = Poker()
+    player, banker = game_init(poker)
+    """玩家抓牌"""
+    player_loop(poker, player)
+    """庄家抓牌"""
+    bank_loop(poker, banker)
     """判断获胜"""
+    winner(player, banker)
 
 
 if __name__ == '__main__':
     main()
-    pass
+
+# -------------------- Practice --------------------
+# 自己将整个游戏再重写一遍,并将当前游戏改成三局两胜制
+
