@@ -44,7 +44,7 @@ b = 2
 # print(c)
 #
 # # 多个变量赋值(使用逗号分隔)
-# d,e,f = 1,2,3
+d,e,f = 1,2,3
 # print(d)
 # print(e)
 # print(f)
@@ -177,3 +177,11 @@ print(10 > 5 or 10 > 6)
 print(not True)
 print(not False)
 print(not (10 > 20))
+
+print('-------')
+
+var = 10 < 5 and '大于' and 10 > 5
+var = 10 < 5 or '' or 'xxx'
+
+print(var)
+print('-------')

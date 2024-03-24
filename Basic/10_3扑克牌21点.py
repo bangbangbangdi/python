@@ -195,7 +195,7 @@ def game_init(poker: Poker) -> list[Player]:
     return [player, banker]
 
 
-def player_loop(poker: Poker, player: Player):
+def player_loop(poker: Poker, player: Player) -> bool:
     """
     玩家抓牌循环
     :param poker:
@@ -213,13 +213,13 @@ def player_loop(poker: Poker, player: Player):
             player.show_card()
             count = get_count(player.cards)
             if count > 21:
-                print(f'抱歉...您当前分数为{count},庄家获胜')
-                return
+                print(f'抱歉...您当前分数为{count} 爆了,庄家获胜')
+                return True
         else:
-            return
+            return False
 
 
-def bank_loop(poker: Poker, banker: Player):
+def bank_loop(poker: Poker, banker: Player) -> bool:
     """
     庄家抓牌循环
     :param poker:
@@ -236,10 +236,10 @@ def bank_loop(poker: Poker, banker: Player):
             banker.show_card()
             count = get_count(banker.cards)
             if count > 21:
-                print(f'庄家分数为{count},玩家获胜')
-                return
+                print(f'庄家分数为{count} 爆了,玩家获胜')
+                return True
         else:
-            break
+            return False
 
 
 def main():
@@ -250,10 +250,12 @@ def main():
     """游戏初始化"""
     poker = Poker()
     player, banker = game_init(poker)
-    """玩家抓牌"""
-    player_loop(poker, player)
-    """庄家抓牌"""
-    bank_loop(poker, banker)
+    """玩家抓牌 返回值是True则意味着玩家抓爆了"""
+    if player_loop(poker, player):
+        return
+    """庄家抓牌 返回值是True则意味着庄家抓爆了"""
+    if bank_loop(poker, banker):
+        return
     """判断获胜"""
     winner(player, banker)
 
@@ -263,4 +265,3 @@ if __name__ == '__main__':
 
 # -------------------- Practice --------------------
 # 自己将整个游戏再重写一遍,并将当前游戏改成三局两胜制
-

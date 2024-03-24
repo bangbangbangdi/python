@@ -24,7 +24,7 @@ s3 = 'aaabb'
 print(s3.count('b'))
 
 s4 = 'cccdd'
-print(s4.replace('c', 'd'))
+print(s4.replace('c', 'd',2))
 
 s5 = '1#2#3#4'
 print(s5.split('#'))
@@ -42,6 +42,10 @@ print(len(s8.strip()))
 
 s9 = 'a'
 print(s9.join('hello'))
+l1 = ['海南省','海口市']
+st1 = '-'
+print(st1.join(l1))
+
 # -------------------------------- 列表 --------------------------------
 # -------- 增 ---------
 # append  追加   在列表的最后来添加一个对象/数据
@@ -64,33 +68,39 @@ num1_list = [4, 5, 6]
 
 num1_list.extend(num_list)
 num_list.extend(num1_list)
+print('-----------')
 print(num_list)
 print(num1_list)
+print('-----------')
 
 # -------- 删 ---------
-# a_list = [1,2,3,4,5]
+a_list = [1,2,3,4,5]
 #
-# print(a_list)
+print(a_list)
 
 # 根据下标来删除列表中的元素
 # 爬取的数据中 有个别的数据 是我们不想要的 那么我们就可以通过下标的方式来删除
-# del a_list[2]
-# print(a_list)
+del a_list[2]
+print(a_list)
 
 
-# b_list = [1,2,3,4,5]
-# print(b_list)
+b_list = [1,2,3,4,5]
+print(b_list)
 # pop是删除列表中的最后一个元素
-# b_list.pop()
+b_list.pop()
 #
-# print(b_list)
+print(b_list)
 
 
 c_list = [1, 2, 3, 3, 4, 5]
 print(c_list)
 
 # 根据元素来删除列表中的数据
-c_list.remove(3)
+c_list.remove(1)
+
+while 3 in c_list:
+    c_list.remove(3)
+
 print(c_list)
 
 # -------- 改 ---------
@@ -121,22 +131,22 @@ print(city_list)
 ball_list = ['篮球', '台球']
 
 # 在控制台上输入你喜欢的球类 然后判断是否不在这个列表中
-ball = input('请输入您喜欢的球类')
+# ball = input('请输入您喜欢的球类')
 
-if ball not in ball_list:
-    print('不在')
-else:
-    print('在')
+# if ball not in ball_list:
+#     print('不在')
+# else:
+#     print('在')
 
 # -------------------------------- 元组 --------------------------------
-# a_tuple = (1,2,3,4)
+a_tuple = (1,2,3,4)
 #
-# print(a_tuple[0])
-# print(a_tuple[1])
+print(a_tuple[0])
+print(a_tuple[1])
 
 # 元组是不可以修改里面的内容的
 # a_tuple[3] = 5
-# print(a_tuple)
+print(a_tuple)
 
 # a_list = [1,2,3,4]
 #
@@ -146,7 +156,7 @@ else:
 # print(a_list)
 # 列表中的元素是可以修改的 而元组中的元素是不可以被修改
 
-
+print('===========')
 a_tuple = (5)
 
 print(type(a_tuple))
@@ -172,6 +182,8 @@ print(s[:4])
 
 # hello  world
 # 从下标为0的位置开始 到下标为6的位置结束  每次增长2个长度
+print('============')
+print(s[0:6])
 print(s[0:6:2])
 
 # -------------------------------- 字典 --------------------------------
