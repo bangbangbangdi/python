@@ -11,24 +11,75 @@ weqwe
 
 # 02_数据类型
 # 变量
+a = 'Hello World!'
+a = 'Hello, world.'
+b = "hello world."
+print(a)
+print(b)
 # -------------------------------- 数据类型 --------------------------------
 # Number     数值
 #      int
+ai = 123
+bi = 12311.123
+print(ai,bi)
+print(ai,   bi)
+print(ai,
+      bi)
+# print函数内换行 /n
+print(f"{ai}\n{bi}")
+
 #      float
+af = 1.23
+print(af)
+
 # boolean    布尔
+# 首字母大写！！！
+ab = True
+bb = False
+print(f'{ab}\n{bb}')
+
 # string     字符串
 # 字符串 使用的是单引号 或者双引号
 # 不允许一单一双 屌丝写法
-# 单引号和双引号的嵌套
+ast = 'as不能用，好像是个函数'
+bst = "吃好喝好，长生不老"
+print(ast)
+print(bst)
+# 单引号和双引号的嵌套，内测的引号会被自动识别成字符串
+cst = '"早睡早起身体好"'
+dst = "'可惜暂时做不到'"
+print(cst), print(dst)
 # 单引号套单引号  双引号套双引号
+# 不可行，报错了
+# est = ''看什么看''
+# fst = ""NO!""
+# print(est), print(fst)
+
+
 # -------------------------------- 查看数据类型 --------------------------------
 # 变量没有类型,数据才有类型
-# int
-# float
-# boolean
-# string
 # type方法判断变量的数据类型
 # 格式：type（变量）
+# int
+dai = 9090
+print(dai)
+print(type(dai))
+
+# float
+daf = 0.141392
+print(f'{daf}n\{type(daf)}') #成了！
+
+# boolean
+dab = ab
+dbb = bb
+print(dab)
+print(type(dab))
+print(dbb)
+print(type(dbb))
+
+# string
+print(type(ast))
+
 
 # 1. 标识符由字母、下划线和数字组成，且数字不能开头。
 # 2. 严格区分大小写。
@@ -37,10 +88,29 @@ weqwe
 
 # -------------------------------- 转换为整型 --------------------------------
 # str --> int
+str1 = '999'
+si1 = int(str1)
+print(si1)
+print(type(si1))
+
 
 # float --> int
+flo1 = 0.1191
+flo1 = int(flo1)
+print(flo1)
+print(type(flo1))
 
 # boolean --> int
+print(type(ab))
+ab = int(ab)
+print(type(ab))
+print(ab)
+
+aaa = False
+print(type(aaa))
+aaa = int(aaa)
+print(type(aaa))
+print(aaa)
 
 # 123.456 和 12ab 字符串，都包含非法字符，不能被转换成为整数，会报错
 
