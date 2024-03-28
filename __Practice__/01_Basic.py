@@ -116,21 +116,88 @@ print(aaa)
 
 # -------------------------------- 转换为浮点数 --------------------------------
 # int --> float
+a12 = 12
+print(type(a12))
+print(a12)
+a12 = float(a12)
+print(type(a12))
+print(a12)
+print('=========================')
+
 # str --> float
+b12 = '678'
+b13 = '12ba'
+# print(type(b12,b13)) # 写法错误，报错
+# print(type(b12)(b13)) # 不报错，但是只显示b13的值
+print(type(b12))
+print(type(b13))
+print(f'{b12}\n{b13}')
+b12 = float(b12)
+# b13 = float(b13) # 数字+字母非法了，转换不了
+print(type(b12))
+# print(type(b13)) # 非法，报错
+print(f'{b12}\n{b13}')
+print(type(b12))
+print(type(b13)) # 没转换上，还是str
+
+
 # boolean -->float
+# 仍旧可以直接转换
+a23 = False
+a23 = float(a23)
+print(type(a23))
+print(a23)
 
 
 # -------------------------------- 转换为字符串 --------------------------------
 # int --> str
+b12 = 996996
+b12 = str(b12)
+print(type(b12))
+print(b12)
+
+print('====================')
+
 # float --> str
+b11 = 1.12321
+b11 = str(b11)
+print(type(b11))
+print(b11)
+
 # boolean -->str
+# 直接把Faslse和True转换为str，输出也为文字内容
+b23 = True
+b23 = str(b23)
+print(type(b23))
+print(b23)
+
+
 
 # -------------------------------- 转换为布尔类型 --------------------------------
 # 如果对非0的整数(int 包含正数和负数)进行bool类型的转换 那么就全都是True
 # 在整数的范围内 0强制类型转换为bool类型的结果是false
+i_b1 = 133
+i_b2 = -2
+i_b3 = 0
+# int_list = [i_b1,i_b2,i_b3] # 企图偷懒但失败，留作日后课题
+# print(int_list)
+# print(type(int_list))
+print(type(i_b1),type(i_b2),type(i_b3))
+print(i_b1,i_b2,i_b3)
+# i_b1, i_b2, i_b3 = bool(i_b1,i_b2,i_b3) # NO
+i_b1, i_b2, i_b3 = bool(i_b1), bool(i_b2), bool(i_b3)
+print(type(i_b1),type(i_b2),type(i_b3))
+print(i_b1,i_b2,i_b3)
+
 # 浮点数
 # 将浮点数转换为bool类型的数据的时候  正的浮点数和负的浮点数的结果是true
 # 如果是0.0 那么结果是false
+f_b1 = 1.25
+f_b2 = 0.654
+f_b3 = -1.56
+f_b4 = -0.789
+f_b5 = 0.0
+
 # 字符串
 # 只要字符串中有内容 那么在强制类型转换为bool的时候 那么就返回True
 # 列表
