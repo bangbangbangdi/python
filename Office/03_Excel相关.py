@@ -43,22 +43,22 @@ def read_excel():
     for i in range(1, 10):
         for j in range(1, sheet.max_column + 1):
             cell = sheet.cell(row=i, column=j)
-            print(cell.value, end='\t')
+            # print(cell.value, end='\t')
 
             # 格式化数据
             # print(cell.data_type, end=';')
             # print(type(cell), end=';')
-            # if j == 1 and cell.data_type != 'd':
-            #     print(f'{cell.value:<10}', end='\t')
-            # elif j == 1:
-            #     fm_val = cell.value.strftime('%Y/%m/%d')
-            #     print(f'{fm_val:<10}', end='\t')
-            # elif j == 3:
-            #     print(f'{cell.value:<6}', end='\t')
-            # elif j == 6:
-            #     print(f'{cell.value:<6}', end='\t')
-            # else:
-            #     print(cell.value, end='\t')
+            if j == 1 and cell.data_type != 'd':
+                print(f'{cell.value:<10}', end='\t')
+            elif j == 1:
+                fm_val = cell.value.strftime('%Y/%m/%d')
+                print(f'{fm_val:<10}', end='\t')
+            elif j == 3:
+                print(f'{cell.value:<6}', end='\t')
+            elif j == 6:
+                print(f'{cell.value:<6}', end='\t')
+            else:
+                print(cell.value, end='\t')
         print()
 
 
@@ -68,23 +68,60 @@ def write_excel():
     sheet = wb.active
     sheet.title = 'characters'
     titles = ('姓名', '力量', '敏捷', '耐力', '幸运', '成长', '财富')
-    for col_index, title in enumerate(titles):
-        sheet.cell(row=1, column=col_index + 1, value=title)
+
+    # 我们很多时候会需要获取遍历对象的索引值
+    col_index = 0
+    for title in titles:
+        col_index += 1
+        sheet.cell(row=1, column=col_index, value=title)
+    # 不过像上面这样每次都要单独创建一个变量并手动的自增好麻烦...
+    # 有没有更优雅的写法呢?
+
+    # for col_index, title in enumerate(titles):
+    #     sheet.cell(row=1, column=col_index + 1, value=title)
 
     names = ('kino', 'kirii', 'erms', 'shibo', 'kuroniko', 'kaiba')
     for row_index, name in enumerate(names):
         row = row_index + 2
         for col in range(1, 1 + len(titles)):
-            sheet.cell(row=row, column=col, value=name if col == 1 else random.randint(1, 101))
+            # 名字需要单独设置
+            if col == 1:
+                sheet.cell(row=row, column=col, value=name)
+            else:
+                sheet.cell(row=row, column=col, value=random.randint(1, 101))
+            # 这个if-else看着好不顺眼...明明两个操作都是要给对应的单元格赋值
+            # 就不能简单一点吗?
 
-    wb.save('./testFile/ExcelTest1.xlsx')
+            # sheet.cell(row=row, column=col, value=name if col == 1 else random.randint(1, 101))
+
+    wb.save('./testFile/CharacterStatus.xlsx')
+
+
+# -------------------- 使用excel公式 --------------------
+def use_excel_func():
+    """
+    在CharacterStatus.xlsx的最右边添加一列 平均值 计算角色的平均属性
+    :return:
+    """
+    wb = openpyxl.load_workbook('./testFile/CharacterStatus.xlsx')
+    sheet = wb.worksheets[0]
+    max_row = sheet.max_row
+    max_col = sheet.max_column
+    # 这里我们需要把列数转为对应的大写字母  例如 1 -> A; 2 -> B
+    avg_start = 'B'
+    avg_end = chr(max_col + 64)
+    avg = chr(max_col + 64 + 1)
+    for row in range(2, max_row + 1):
+        sheet[f'{avg}{row}'] = f'=aven'
+        pass
 
 
 # -------------------- main --------------------
 
 def main():
-    # read_excel()
-    write_excel()
+    read_excel()
+    # write_excel()
+    # use_excel_func()
 
 
 if __name__ == '__main__':

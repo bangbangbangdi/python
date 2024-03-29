@@ -29,6 +29,7 @@ from random import randint
 # schedule = schedules[rand]
 # print('晚上要%s' % schedule)
 
+
 # --------------------------- 函数的定义和调用 -------------------------------------
 # 不难发现其中for循环的部分总是重复的
 # 这种情况下我们就可以将这部分代码封装到函数中,解决代码重复的问题
@@ -110,30 +111,30 @@ from random import randint
 
 # ----------------------------- 函数内调用函数 -----------------------------------
 # 嗯....那几个print()也好碍眼啊...,能不能吧那部分代码也封住也封装一下呢?
-def consider(schedules):
-    rand = randint(0, len(schedules) - 1)
-    for _ in range(3):
-        print('让我想想...')
-        time.sleep(1)
-    program = schedules[rand]
-    return program
-
-
-def decide_sche(times, morn_sche, after_sche, night_sche):
-    all_events = [morn_sche, after_sche, night_sche]
-    for i in range(len(times)):
-        print("%s要干什么呢?" % times[i])
-        # 这里我们调用了另一个我们自定义的函数
-        schedule = consider(all_events[i])
-        print("%s要%s" % (times[i], schedule))
-
-
-periods = ['早上', '下午', '晚上']
-morn_event = ['睡个懒觉', '练字', '学习']
-after_event = ['看书', '健身', '学习']
-night_event = ['吃顿好的', '看电影', '看漫画']
-
-
+# def consider(schedules):
+#     rand = randint(0, len(schedules) - 1)
+#     for _ in range(3):
+#         print('让我想想...')
+#         time.sleep(1)
+#     program = schedules[rand]
+#     return program
+#
+#
+# def decide_sche(times, morn_sche, after_sche, night_sche):
+#     all_events = [morn_sche, after_sche, night_sche]
+#     for i in range(len(times)):
+#         print("%s要干什么呢?" % times[i])
+#         # 这里我们调用了另一个我们自定义的函数
+#         schedule = consider(all_events[i])
+#         print("%s要%s" % (times[i], schedule))
+#
+#
+# periods = ['早上', '下午', '晚上']
+# morn_event = ['睡个懒觉', '练字', '学习']
+# after_event = ['看书', '健身', '学习']
+# night_event = ['吃顿好的', '看电影', '看漫画']
+#
+#
 # decide_sche(periods, morn_event, after_event, night_event)
 
 
@@ -141,22 +142,25 @@ night_event = ['吃顿好的', '看电影', '看漫画']
 
 # ----------------------------- 局部变量 -----------------------------------
 # 描述:在函数内部定义的变量,其作用范围尽在函数内部
-def test():
-    local_var = '我是局部变量哒'
-    print('我在函数内因此能访问到', local_var)
-
-
-# print('在函数外还能访问到嘛?',local_val)
+# def test():
+#     local_var = '我是局部变量哒'
+#     print('我在函数内因此能访问到', local_var)
+#
+#     print('xxx')
+#     return local_var
+#
+#
+# print('在函数外还能访问到嘛?', test())
 
 # ----------------------------- 全局变量 -----------------------------------
-global_var = '我是全局变量哒'
+# global_var = '我是全局变量哒'
 
 
-def test2():
+# def test2():
     # global global_var
     # global_var = 'change'
-    print('我能访问到全局变量嘛?', global_var)
-
-
-test2()
-print('在函数外还能访问到嘛?', global_var)
+#     print('我能访问到全局变量嘛?', global_var)
+#
+#
+# test2()
+# print('在函数外还能访问到嘛?', global_var)

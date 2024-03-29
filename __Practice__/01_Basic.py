@@ -21,8 +21,8 @@ print(b)
 #      int
 ai = 123
 bi = 12311.123
-print(ai,bi)
-print(ai,   bi)
+print(ai, bi)
+print(ai, bi)
 print(ai,
       bi)
 # print函数内换行 /n
@@ -67,7 +67,7 @@ print(type(dai))
 
 # float
 daf = 0.141392
-print(f'{daf}n\{type(daf)}') #成了！
+print(f'{daf}n\{type(daf)}')  # 成了！
 
 # boolean
 dab = ab
@@ -80,7 +80,6 @@ print(type(dbb))
 # string
 print(type(ast))
 
-
 # 1. 标识符由字母、下划线和数字组成，且数字不能开头。
 # 2. 严格区分大小写。
 # 3. 不能使用关键字。
@@ -92,7 +91,6 @@ str1 = '999'
 si1 = int(str1)
 print(si1)
 print(type(si1))
-
 
 # float --> int
 flo1 = 0.1191
@@ -138,8 +136,7 @@ print(type(b12))
 # print(type(b13)) # 非法，报错
 print(f'{b12}\n{b13}')
 print(type(b12))
-print(type(b13)) # 没转换上，还是str
-
+print(type(b13))  # 没转换上，还是str
 
 # boolean -->float
 # 仍旧可以直接转换
@@ -147,7 +144,6 @@ a23 = False
 a23 = float(a23)
 print(type(a23))
 print(a23)
-
 
 # -------------------------------- 转换为字符串 --------------------------------
 # int --> str
@@ -171,23 +167,34 @@ b23 = str(b23)
 print(type(b23))
 print(b23)
 
-
-
 # -------------------------------- 转换为布尔类型 --------------------------------
 # 如果对非0的整数(int 包含正数和负数)进行bool类型的转换 那么就全都是True
 # 在整数的范围内 0强制类型转换为bool类型的结果是false
 i_b1 = 133
 i_b2 = -2
 i_b3 = 0
-# int_list = [i_b1,i_b2,i_b3] # 企图偷懒但失败，留作日后课题
+int_list = [i_b1, i_b2, i_b3]  # 企图偷懒但失败，留作日后课题
+index = 0
+for i in int_list:
+    i = bool(i)
+    print(i)
+    print(type(i))
+    int_list[index] = i
+    index += 1
+
+for i in int_list:
+    print(type(i))
+
+print('----------------')
 # print(int_list)
 # print(type(int_list))
-print(type(i_b1),type(i_b2),type(i_b3))
-print(i_b1,i_b2,i_b3)
+print(type(i_b1), type(i_b2), type(i_b3))
+
+print(i_b1, i_b2, i_b3)
 # i_b1, i_b2, i_b3 = bool(i_b1,i_b2,i_b3) # NO
 i_b1, i_b2, i_b3 = bool(i_b1), bool(i_b2), bool(i_b3)
-print(type(i_b1),type(i_b2),type(i_b3))
-print(i_b1,i_b2,i_b3)
+print(type(i_b1), type(i_b2), type(i_b3))
+print(i_b1, i_b2, i_b3)
 
 # 浮点数
 # 将浮点数转换为bool类型的数据的时候  正的浮点数和负的浮点数的结果是true
