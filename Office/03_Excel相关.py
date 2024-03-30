@@ -4,6 +4,7 @@ import datetime
 import random
 
 import openpyxl
+from openpyxl.styles import Font, Border, Side, PatternFill
 
 
 # -------------------- 读操作 --------------------
@@ -111,17 +112,55 @@ def use_excel_func():
     avg_start = 'B'
     avg_end = chr(max_col + 64)
     avg = chr(max_col + 64 + 1)
-    for row in range(2, max_row + 1):
-        sheet[f'{avg}{row}'] = f'=aven'
-        pass
+    for row in range(1, max_row + 1):
+        sheet[f'{avg}{row}'] = f'=average({avg_start}{row}:{avg_end}{row})' if row != 1 else '平均值'
+    wb.save('./testFile/CharacterStatus.xlsx')
+
+
+# -------------------- excel格式化 --------------------
+# 需求:
+# 1.将平均数从小数转为整数
+# 2.为整个表格添加边框
+# 3.表头加粗
+# 4.平均数列添加背景颜色
+def format_excel():
+    file_path = './testFile/CharacterStatus.xlsx'
+    wb = openpyxl.load_workbook(file_path)
+    sheet = wb.worksheets[0]
+    max_row = sheet.max_row
+    max_col = sheet.max_column
+
+    # 边框线条 请告诉我颜色(16进制RGB)以及线条样式
+    side = Side(color='000000', style='thin')
+    # 设置边框
+    border = Border(left=side, right=side, top=side, bottom=side)
+    # 设置字体
+    font = Font(bold=True)
+    # 设置背景颜色 patternType = 填充模式(solid指纯色填充) , fgColor = 前景色(花纹颜色) , bgColor 背景色
+    pattern = PatternFill(patternType='solid', fgColor='00F5FF')
+    # pattern = PatternFill(patternType='darkDown', fgColor='00F5FF', bgColor='ff4500')
+
+    for row in range(1, max_row + 1):
+        for col in range(1, max_col + 1):
+            sheet.cell(row=row, column=col).border = border
+            if row == 1:
+                # 表头加粗
+                sheet.cell(row=row, column=col).font = font
+            if col == max_col:
+                # 将平均数的列设置为整数: 这里的'0'实际上是格式化代码 -> 更多可以Google或者直接查看文档gg
+                sheet.cell(row=row, column=max_col).number_format = '0'
+                sheet.cell(row=row, column=max_col).fill = pattern
+
+    wb.save(file_path)
 
 
 # -------------------- main --------------------
 
 def main():
-    read_excel()
+    # read_excel()
     # write_excel()
     # use_excel_func()
+    format_excel()
 
 
 if __name__ == '__main__':
