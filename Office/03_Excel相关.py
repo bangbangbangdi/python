@@ -217,10 +217,20 @@ def create_chart():
     # chart3.series[0].data_points = [slice]
 
     # ----------------- 生成3D柱状图
+    """
+    这里生成的3D柱状图需要用Excel才能正常显示...
+    辣鸡WPS还我时间...
+    """
     chart4 = BarChart3D()
     chart4.title = '3D BarChart'
-    chart4.height = 9
-    chart4.width = 18
+    # chart4.height = 9
+    # chart4.width = 18
+
+    # 设置数据
+    data = Reference(sheet, min_col=2, min_row=1, max_col=max_col, max_row=3)
+    # 设置类别 category
+    cats = Reference(sheet, min_col=1, min_row=2, max_row=3)
+
     chart4.add_data(data, titles_from_data=True)
     chart4.set_categories(cats)
     sheet.add_chart(chart4, 'N27')
