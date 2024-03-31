@@ -4,7 +4,10 @@ import datetime
 import random
 
 import openpyxl
+from openpyxl.chart.marker import DataPoint
 from openpyxl.styles import Font, Border, Side, PatternFill
+from openpyxl.chart import BarChart, Reference, BarChart3D, PieChart
+from copy import deepcopy
 
 
 # -------------------- 读操作 --------------------
@@ -154,13 +157,85 @@ def format_excel():
     wb.save(file_path)
 
 
+# -------------------- 绘制表格 -------------------
+def create_chart():
+    file_path = './testFile/CharacterStatus.xlsx'
+    wb = openpyxl.load_workbook(file_path)
+    sheet = wb.worksheets[0]
+    max_row = sheet.max_row
+    max_col = sheet.max_column
+
+    # -------------------生成垂直柱状图
+    # 获取BarChart(图表)对象
+    chart1 = BarChart()
+    # 设置图表类型 col垂直柱状图
+    chart1.type = 'col'
+    # 图表类型
+    chart1.style = 10
+    # 设置图表大小
+    chart1.height = 9
+    chart1.width = 18
+    # 设置表头
+    chart1.title = 'CharacterStatus'
+    # 设置x轴标题
+    chart1.x_axis.title = 'Status'
+    # 设置y轴标题
+    chart1.y_axis.title = 'Value'
+
+    # 设置数据
+    data = Reference(sheet, min_col=2, min_row=1, max_col=max_col, max_row=max_row)
+    # 设置类别 category
+    cats = Reference(sheet, min_col=1, min_row=2, max_row=max_row)
+    # 将数据添加到图表中,titles_from_date表示数据源是否有标题(第一行)
+    chart1.add_data(data, titles_from_data=True)
+    # 将类别添加到图表对象中
+    chart1.set_categories(cats)
+    # 将设置好的图表插入到指定位置
+    sheet.add_chart(chart1, 'A10')
+
+    # -----------------生成水平柱状图
+    # 如果我们想要生成一个新的图表的话,无疑需要再创建一个图表对象,然后再进行一系列跟上述相同的的设置
+    # 好麻烦...能不能从A对象copy出一个相同的B对象呢? 这样我们就能省去很多设置的操作了
+    # 当然可以~
+    chart2 = deepcopy(chart1)
+    chart2.style = 11
+    chart2.type = 'bar'
+    chart2.title = 'Horizontal chart'
+    sheet.add_chart(chart2, 'N10')
+
+    # ----------------- 生成饼状图
+    chart3 = PieChart()
+    chart3.title = 'Kino PieChart'
+    labels = Reference(sheet, min_col=2, min_row=1, max_col=max_col)
+    pie_data = Reference(sheet, min_col=1, min_row=2, max_col=max_col)
+    # from_rows 从行当中获取数据
+    chart3.add_data(pie_data, titles_from_data=True, from_rows=True)
+    chart3.set_categories(labels)
+    sheet.add_chart(chart3, 'A27')
+
+    # slice = DataPoint(idx=2, explosion=20)
+    # chart3.series[0].data_points = [slice]
+
+    # ----------------- 生成3D柱状图
+    chart4 = BarChart3D()
+    chart4.title = '3D BarChart'
+    chart4.height = 9
+    chart4.width = 18
+    chart4.add_data(data, titles_from_data=True)
+    chart4.set_categories(cats)
+    sheet.add_chart(chart4, 'N27')
+
+    wb.save(file_path)
+
+
 # -------------------- main --------------------
 
 def main():
     # read_excel()
     # write_excel()
     # use_excel_func()
-    format_excel()
+    # format_excel()
+    create_chart()
 
 
 if __name__ == '__main__':
