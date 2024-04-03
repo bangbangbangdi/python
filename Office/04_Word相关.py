@@ -36,16 +36,81 @@ def create_doc(filename):
         run.font.bold = True
         run.font.color.rgb = RGBColor(46, 139, 87)
 
-    document.save(filename)
-
     # 添加一级标题
     document.add_heading('人の痛みが分かる国')
-    document.add_paragraph()
-    document.add_paragraph('',style='Intense Quote')
+    # 添加带样式的段落
+    document.add_paragraph('多数決の国', style='Intense Quote')
+    # 添加无序列表
+    document.add_paragraph('レールの上の三人の男', style='List Bullet')
+    document.add_paragraph('コロシアム', style='List Bullet')
+    # 添加有序列表
+    document.add_paragraph('大人の国', style='List Number')
+    document.add_paragraph('平和な国', style='List Number')
+    # 添加图片
+    document.add_picture('./testFile/kino1.png', width=Cm(13))
+
+    # 添加分页符
+    document.add_section()
+
+    records = (('kino', 'female', '16'), ('erms', 'unknown', '3'), ('shizu', 'male', '20'))
+    # 添加表格
+    table = document.add_table(rows=1, cols=3)
+    table.style = 'Dark List'
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Name'
+    hdr_cells[1].text = 'gender'
+    hdr_cells[2].text = 'age'
+    # 为表格添加新行
+    for name, gender, age in records:
+        row_cells = table.add_row().cells
+        row_cells[0].text = name
+        row_cells[1].text = gender
+        row_cells[2].text = age
+
+    # 保存文件
+    document.save(filename)
+
+
+# -------------------- 读操作 --------------------
+def read_doc(filename):
+    doc = Document(filename)  # type: Doc
+    for no, p in enumerate(doc.paragraphs):
+        print(no, p.text)
+
+
+# -------------------- 根据模版生成内容 --------------------
+def change_doc(template_name):
+    employees = [
+        {
+            'name': 'kino',
+            'id': '439943994399',
+            'sdate': '2023-11-03',
+            'edate': '9999-12-32',
+            'department': '环球探险',
+            'position': '旅行家',
+            'company': '还没想好叫啥名字有限公司'
+        }
+    ]
+    # 对列表进行循环遍历,批量生成Word文档
+    for emp_dict in employees:
+        doc = Document(template_name)  # type: Doc
+        for p in doc.paragraphs:
+            if '{' not in p.text:
+                continue
+            for run in p.runs:
+                if '{' not in run.text:
+                    continue
+                start, end = run.text.find('{'), run.text.find('}')
+                key, place_holder = run.text[start + 1:end], run.text[start:end + 1]
+                run.text = run.text.replace(place_holder, emp_dict[key])
+        doc.add_picture('./testFile/kino2.png', width=Cm(13))
+        doc.save(f'./testFile/{emp_dict["name"]}离职证明.docx')
 
 
 def main():
-    create_doc('./testFile/Kino.docx')
+    # create_doc('./testFile/Kino.docx')
+    # read_doc('./testFile/离职证明.docx')
+    change_doc('./testFile/离职证明模板.docx')
     pass
 
 
