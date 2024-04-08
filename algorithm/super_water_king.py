@@ -21,7 +21,6 @@ def generate_random_list(max_length=10, max_value=3):
 #   1.2 这些数字各出现了多少次
 # 2.看看是否有某个数真的有出现超过列表长度的一半
 def use_list(ran_list):
-    print(ran_list)
     # 记录出现的不同的数字
     num_list = []
     # 各出现了几次
@@ -130,9 +129,22 @@ def awsome_way(ran_list):
 """
 
 
+# -------------------- For Test --------------------
+def test():
+    test_times = 100000
+    for _ in range(test_times):
+        rand_list = generate_random_list()
+        r1, r2, r3 = use_list(rand_list), use_list(rand_list), awsome_way(rand_list)
+        if r1 != r2 or r2 != r3 or r1 != r3:
+            print(rand_list)
+            print(r1, r2, r3)
+            print('Oops')
+            return
+    print('success')
+
+
 def main():
-    d = {1: 'xx', 2: 'aa'}
-    print(3 in d.keys())
+    test()
 
 
 if __name__ == '__main__':
