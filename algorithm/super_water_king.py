@@ -88,9 +88,8 @@ def use_dict(ran_list):
 
 def awsome_way(ran_list):
     # 候选数字
-    candidate = 0
+    candidate, hp = 0, 0
     # 血量
-    hp = 0
     for num in ran_list:
         if hp == 0:
             candidate, hp = num, 1
@@ -134,7 +133,7 @@ def test():
     test_times = 100000
     for _ in range(test_times):
         rand_list = generate_random_list()
-        r1, r2, r3 = use_list(rand_list), use_list(rand_list), awsome_way(rand_list)
+        r1, r2, r3 = use_list(rand_list), use_dict(rand_list), awsome_way(rand_list)
         if r1 != r2 or r2 != r3 or r1 != r3:
             print(rand_list)
             print(r1, r2, r3)
