@@ -12,9 +12,10 @@
 # -------------------- 多线程编程 --------------------
 # 假设我们需要从网上下载一些文件
 import random
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
-from threading import Thread
+from threading import Thread, RLock
 
 
 # 这里参数中出现的*号,表示*号后面的参数必须使用关键字传参(额外的一些知识啦...简单了解一下就好)
@@ -104,18 +105,80 @@ def daemon_thread():
     time.sleep(5)
     print('我结束啦!')
 
+
 # 资源竞争问题
 # 在编写多线程代码时,不可避免的会遇到多个线程竞争同一个资源的情况.在这种情况下,如果没有合理的机制来保护被竞争的资源
 # 那么就有可能出现非预期的状况.下面的代码创建了100个线程向同一个银行账户(初始余额为0元)转账,每个线程转账金额为1元
 # 在正常情况下,我们的银行账户余额应该是100元,但是下面运行的代码并不能得到100元的结果
+class Account:
+    def __init__(self):
+        """初始的余额"""
+        self.balance = 0.0
+
+    def deposit(self, money):
+        """存钱"""
+        new_balance = money + self.balance
+        """这里我们特地让线程休眠一秒钟,让数据 “过期” ,详解的解释当面说..."""
+        time.sleep(0.01)
+        self.balance = new_balance
+
+
+def dirty_write():
+    account = Account()
+    # 可以更改线程池的大小看看会对结果产生什么影响~ 思考一下原因~
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        for _ in range(100):
+            pool.submit(account.deposit, 1)
+    print(account.balance)
+
+
+# 要解决上述的问题,可以使用锁机制,对操作数据的关键代码加以保护
+class LockAccount:
+    def __init__(self):
+        self.balance = 0.0
+        """我们的锁对象"""
+        self.lock = RLock()
+
+    def deposit(self, money):
+        """获得锁"""
+        self.lock.acquire()
+        try:
+            new_balance = money + self.balance
+            time.sleep(0.01)
+            self.balance = new_balance
+        finally:
+            """释放锁"""
+            self.lock.release()
+
+    def with_deposit(self, money):
+        # 上面代码中可以看到每次都“手动”释放锁很不美观
+        # 我们可以通过with帮助我们释放锁,简化代码 (很多类似这种释放资源的操作都可以交给with来做,例如之前的读取文件的时候)
+        with self.lock:
+            new_balance = money + self.balance
+            time.sleep(0.01)
+            self.balance = new_balance
+
+
+def lock_write():
+    """这次我们创建的是带锁的账户"""
+    account = LockAccount()
+    """下面的代码和上面的dirty_write没有什么区别"""
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        for _ in range(100):
+            # pool.submit(account.deposit, 1)
+            pool.submit(account.with_deposit, 1)
+    print(account.balance)
+
 
 def main():
     # single_thread()
     # multi_thread()
     # thread_pool()
     # without_daemon_thread()
-    daemon_thread()
-    pass
+    # daemon_thread()
+    # dirty_write()
+    lock_write()
+    # pass
 
 
 if __name__ == '__main__':
