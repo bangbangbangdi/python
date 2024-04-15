@@ -13,6 +13,7 @@
 # 假设我们需要从网上下载一些文件
 import random
 import time
+from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 
 
@@ -62,14 +63,58 @@ def multi_thread():
 
 
 # 使用线程池
+# 问题描述:实际上线程的创建和释放都会带来较大的开销;如何减少这种开销呢?
+# 解决思路:我们可以指定一定数量的线程持续存活
+#   有任务来的时候直接用(避免了线程的创建带来的开销),在任务结束的时候不销毁(避免了线程的释放的开销)
+# 生活语言:
+#   没有线程池:1.有工作来了 2.现场去招人(线程的创建) 3.开工(执行任务) 4.任务结束,解雇工人(线程的释放)
+#   有线程池: 1.提前招好工人(维护一定的线程) 2.有工作来了 3.开工(执行任务) 4.任务结束,工人回到待命状态
 def thread_pool():
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        filenames = ['blame', '奇诺之旅', '迷宫饭']
+        start = time.time()
+        for file in filenames:
+            pool.submit(download, filename=file)
+    end = time.time()
+    print(f'总耗时:{end - start:.3f}')
 
-    pass
 
+# 守护线程
+# 问题描述:假设我们把游戏的背景音乐、分数判定、游戏的主逻辑分别交给三个线程去执行
+#   当游戏主逻辑线程结束时背景音乐、分数判定当然也需要结束;即背景音乐和分数判定是和游戏主逻辑强绑定的,当主逻辑结束的时候另外两个也需要结束
+#   守护线程就能完美满足上面这种需求
+def display(content):
+    while True:
+        print(content)
+        time.sleep(1)
+
+
+def without_daemon_thread():
+    # 此处没有设定守护线程时,就算非守护线程结束后,我们开启的线程依然会执行
+    Thread(target=display, args=('ping blame',)).start()
+    Thread(target=display, args=('ping kino',)).start()
+    time.sleep(5)
+    print('我结束啦!')
+
+
+def daemon_thread():
+    # 当守护线程发现只剩自己(守护线程)的时候,它就会自动结束自己的“生命” --(殉情线程..)
+    Thread(target=display, args=('ping blame',), daemon=True).start()
+    Thread(target=display, args=('ping kino',), daemon=True).start()
+    time.sleep(5)
+    print('我结束啦!')
+
+# 资源竞争问题
+# 在编写多线程代码时,不可避免的会遇到多个线程竞争同一个资源的情况.在这种情况下,如果没有合理的机制来保护被竞争的资源
+# 那么就有可能出现非预期的状况.下面的代码创建了100个线程向同一个银行账户(初始余额为0元)转账,每个线程转账金额为1元
+# 在正常情况下,我们的银行账户余额应该是100元,但是下面运行的代码并不能得到100元的结果
 
 def main():
     # single_thread()
     # multi_thread()
+    # thread_pool()
+    # without_daemon_thread()
+    daemon_thread()
     pass
 
 
