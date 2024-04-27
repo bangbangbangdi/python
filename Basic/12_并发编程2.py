@@ -3,7 +3,7 @@
 #   但是对于现在多核计算机而言CPU使用率100%仅仅意味着将一个CPU跑满,其他CPU都在摸鱼(一人干活,多人围观)
 #   为了更加充分的使用CPU的计算能力,我们可以使用多进程
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
-from multiprocessing import current_process, Process
+from multiprocessing import current_process, Process, Queue
 from time import sleep
 
 
@@ -84,6 +84,70 @@ def multi_process_prime():
             print(f'number: {number} is prime: {prime}')
 
 
+# -------------------- 进程间通信 --------------------
+# 哈喽啊~
+# 看了一下上次正式更新的时间,居然已经过了10天了...
+# 闲言少叙,我们接着撸代码!
+# 在讲 "进程间通信"之前我们先尝试做这样一件看似简单的事情:
+#   启动两个进程,一个进程输出“Tin” 一个进程输出“Bang”,当两个进程输出的“Tin”和“Bang”加起来一共有50个时,就结束程序;
+counter = 0
+
+
+def without_communication_task(content):
+    global counter
+    while counter < 50:
+        print(content, counter, flush=True)
+        counter += 1
+        sleep(0.1)
+
+
+# 我们先来看看没有进程通信的情况下是什么样子的
+def without_communication():
+    Process(target=without_communication_task, args=('Tin',)).start()
+    Process(target=without_communication_task, args=('Bang',)).start()
+
+
+'''
+通过观察我们发现,Tin和Bang居然各打印了50次
+其实原因也不难理解,因为每个进程都有自己独立的内存空间,这也就意味着有两个完全不搭嘎的counter存在于他们各自的进程中
+并在各自的进程中都从0加到50,因此Tin和Bang都各自打印了50次
+
+进程A和进程B的情况可以类比为两个人在各自的小黑屋里执行自己的任务
+A看不到B,B也看不到A
+而我们的任务是需要他们协同完成的,即A和B都能读取且修改同一个变量counter(进程间的通信)
+'''
+
+
+def communication_task(content, queue):
+    count = queue.get()
+    while count < 50:
+        print(content, count)
+        count += 1
+        queue.put(count)
+        sleep(0.1)
+        count = queue.get()
+
+
+def process_communication():
+    queue = Queue()
+    queue.put(0)
+    p1 = Process(target=communication_task, args=('Tin', queue))
+    p1.start()
+    p2 = Process(target=communication_task, args=('Bang', queue))
+    p2.start()
+    while p1.is_alive() and p2.is_alive():
+        pass
+    """
+    这里还需要往队列里添加50的原因在于:
+    当调用queue.get()时,如果queue内没有数据,进程会处于阻塞的状态(进程不会终止)
+    而我们在循环内只会往queue中放入一次50,拿到50的进程会跳出循环条件(进程终止)
+    剩下的另一个进程则要面对一个空的queue(进程阻塞)
+    因此我们需要手动往queue中再次放入50让另一个进程也终止
+    (天呐...这个解释起来害蛮麻烦的;到时候我画个图吧)
+    """
+    queue.put(50)
+
+
 def main():
     # single_process()
     # multi_process()
@@ -95,7 +159,17 @@ def main():
     # multi_thread_prime()
 
     """通过观察可以发现,多进程情况下cpu使用率能简单的突破100%(具体多少与CPU核心数相关,m1是660%),相比多线程能更好榨干cpu性能"""
-    multi_process_prime()
+    # multi_process_prime()
+
+    """进程通信测试"""
+    # without_communication()
+    process_communication()
+
+    # queue = Queue()
+    # queue.put(10)
+    # print(queue.get())
+    # # queue.put(20)
+    # print(queue.get())
 
     pass
 
