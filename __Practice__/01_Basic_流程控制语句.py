@@ -13,18 +13,18 @@ if 1 > 2 :
 kino = True
 if kino:
     print('她的摩托车叫艾尔梅斯')
-l
+
 # if-else的语法
 # if 判断条件:
 #       判断条件为true的时候执行的代码
 # else:
 #       判断条件为false的时候执行的代码
 
-# password = input('Enter your PW')
-# if password == '2024':
-#     print('Login Success!')
-# else:
-#     print('You are not allow to access')
+password = input('Enter your PW')
+if password == '2024':
+    print('Login Success!')
+else:
+    print('You are not allow to access')
 
 # -------------------------------- for --------------------------------
 # for循环：遍历，挨个输出。
