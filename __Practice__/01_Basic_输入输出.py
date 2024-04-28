@@ -52,10 +52,16 @@ size = float(input('你穿多大的鞋子？'))
 # print('我的名字是%s,我是%s,我%d岁了,我穿%.1fcm的鞋子。') % (name,mbti,age,size) # 错误，print 语句中的格式化操作符 % 现在被包含在 print 函数的括号内，这样整个格式化字符串和其对应的变量都作为 print 的参数处理。
 print('我的名字是%s,我是%s,我%d岁了,我穿%.1fcm的鞋子。' % (name,mbti,age,size))
 
+# name = input('哈喽，你是谁？')
+# mbti = input('你是什么mbti？')
+# age = str(input('你多大了？'))  # 这里的str()可以省掉,原因就像上面说的那样,input()函数返回的本身就是字符串
+# size = str(input('你穿多大的鞋子？'))  # 同上~
+
+# str型整
 name = input('哈喽，你是谁？')
 mbti = input('你是什么mbti？')
-age = str(input('你多大了？'))  # 这里的str()可以省掉,原因就像上面说的那样,input()函数返回的本身就是字符串
-size = str(input('你穿多大的鞋子？'))  # 同上~
+age = input('你多大了？')
+size = input('你穿多大的鞋子？') 
 
 # 暴力而简便的方法：把所有类型都先强制转换为str
 print('我的名字是%s,我是%s,我%s岁了,我穿%scm的鞋子。' % (name,mbti,age,size))
