@@ -57,7 +57,8 @@ def gui_kino():
     # 创建wx.Panel组件,并指定其父容器
     panel = wx.Panel(frm, size=(200, 200), pos=(100, 100))
     # 创建image对象,指定图片路径以及类型
-    image = wx.Image('./img/kino1.png', wx.BITMAP_TYPE_PNG)
+    image = wx.Image('../img/kino1.png', wx.BITMAP_TYPE_PNG)
+
     my_pic = image.ConvertToBitmap()
 
     frm.Center()
@@ -76,7 +77,8 @@ def on_click(event):
 
 def main():
     # first_wx()
-    about_frame()
+    # about_frame()
+    gui_kino()
 
 
 if __name__ == '__main__':
