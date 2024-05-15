@@ -1,5 +1,6 @@
 # -------------------- 事件03(wxPython) --------------------
 import wx
+import os
 
 
 class EventFrame(wx.Frame):
@@ -14,7 +15,7 @@ class EventFrame(wx.Frame):
         self.SetMenuBar(menubar)
         self.Bind(wx.EVT_MENU, self.on_quit)
         # 创建wx.Panel组件,并指定其父容器
-        self.panel = wx.Panel(self, size=(200, 200), pos=(100, 100))
+        self.panel = wx.Panel(self, pos=(100, 100))
         # 创建image对象,指定图片路径以及类型
         self.img_path = '../img/kino1.png'
         self.image = wx.Image(self.img_path, wx.BITMAP_TYPE_PNG)
@@ -23,10 +24,18 @@ class EventFrame(wx.Frame):
         wx.StaticBitmap(self.panel, -1, my_pic, pos=(0, 30))
         change_btn = wx.Button(self.panel, label='Change Picture')
         test_btn = wx.Button(self.panel, label='test', pos=(200, 4))
+        random_btn = wx.Button(self.panel, label='random', pos=(400, 4))
+        stop_btn = wx.Button(self.panel, label='stop', pos=(600, 4))
         change_btn.Show()
         test_btn.Show()
         self.Bind(wx.EVT_BUTTON, self.change_picture, change_btn)
         self.Bind(wx.EVT_BUTTON, self.test, test_btn)
+        self.Bind(wx.EVT_BUTTON, self.random_picture, random_btn)
+        self.Bind(wx.EVT_BUTTON, self.random_stop, stop_btn)
+
+        self.SetSize(self.image.GetSize())
+
+        self.cur_pic_index = 0
 
     def on_quit(self, event):
         self.Close(True)
@@ -41,8 +50,25 @@ class EventFrame(wx.Frame):
         self.SetSize(self.image.GetSize())
 
     def test(self, event):
-        self.image.Resize(size=(400, 400), pos=(0, 30))
+        path_list = os.listdir('../img')
+        path_list = ['../img/' + path for path in path_list]
+        pic_list = []
+        for path in path_list:
+            self.image.LoadFile(path)
+            pic_list.append(self.image.ConvertToBitmap())
+        self.cur_pic_index = 0 if self.cur_pic_index == len(pic_list) - 1 else self.cur_pic_index + 1
+        wx.StaticBitmap(self.panel, 1, pic_list[self.cur_pic_index], pos=(0, 30))
+        self.SetSize(pic_list[self.cur_pic_index].GetSize())
         pass
+
+    def random_picture(self, event):
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.test, self.timer)
+        self.timer.Start(1000)
+        pass
+
+    def random_stop(self, event):
+        self.timer.Stop()
 
 
 def main():
