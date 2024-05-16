@@ -6,6 +6,7 @@ import os
 class EventFrame(wx.Frame):
     def __init__(self, *arges, **kwargs):
         super(EventFrame, self).__init__(*arges, **kwargs)
+        self.load_picture()
         self.init_ui()
 
     def init_ui(self):
@@ -16,56 +17,59 @@ class EventFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_quit)
         # 创建wx.Panel组件,并指定其父容器
         self.panel = wx.Panel(self, pos=(100, 100))
-        # 创建image对象,指定图片路径以及类型
-        self.img_path = '../img/kino1.png'
-        self.image = wx.Image(self.img_path, wx.BITMAP_TYPE_PNG)
-        my_pic = self.image.ConvertToBitmap()
         # 显示图片
-        wx.StaticBitmap(self.panel, -1, my_pic, pos=(0, 30))
-        change_btn = wx.Button(self.panel, label='Change Picture')
+        self.cur_pic_index = 0
+        cur_pic = self.pic_list[self.cur_pic_index]
+        wx.StaticBitmap(self.panel, -1, cur_pic, pos=(0, 30))
+        change_btn = wx.Button(self.panel, label='Next Picture')
         test_btn = wx.Button(self.panel, label='test', pos=(200, 4))
-        random_btn = wx.Button(self.panel, label='random', pos=(400, 4))
-        stop_btn = wx.Button(self.panel, label='stop', pos=(600, 4))
+        random_btn = wx.Button(self.panel, label='Carousel', pos=(400, 4))
+        stop_btn = wx.Button(self.panel, label='Stop Carousel', pos=(600, 4))
         change_btn.Show()
         test_btn.Show()
-        self.Bind(wx.EVT_BUTTON, self.change_picture, change_btn)
+        self.Bind(wx.EVT_BUTTON, self.next_picture, change_btn)
         self.Bind(wx.EVT_BUTTON, self.test, test_btn)
         self.Bind(wx.EVT_BUTTON, self.random_picture, random_btn)
         self.Bind(wx.EVT_BUTTON, self.random_stop, stop_btn)
 
-        self.SetSize(self.image.GetSize())
+        self.SetSize(cur_pic.GetSize())
 
-        self.cur_pic_index = 0
+    def load_picture(self):
+        path_list = os.listdir('../img')
+        path_list = ['../img/' + path for path in path_list]
+        self.pic_list = []
+        for path in path_list:
+            bit_map = wx.Bitmap()
+            bit_map.LoadFile(path)
+            self.pic_list.append(bit_map)
+
+    def load_saying(self):
+        saying_dic = {}
+        saying_dic['kino'] = '''撃つ時は、躊躇わないこと。相手が食べられる動物でも、食べられない動物でもです。
+        どんな時でも、他の生き物ではなく、自分が生き残ることを最優先にしてください。……死人は、ペンを持ちません
+        '''
+        saying_dic['erms'] = '人間の持つポテンシャルの高さと、低さについて悩んでるとこ'
+        saying_dic['cibo'] = 'はじめまして私はシボあなた名前は？'
+        saying_dic['kuroniko'] = '私この身体でいられるの今日で最後なの。だから今日だけは私の思い通りに生きてみたいんだ'
+        saying_dic['lain'] = 'そうだね、いつだって会えるよ'
 
     def on_quit(self, event):
         self.Close(True)
 
-    def change_picture(self, event):
-        self.img_path = '../img/cibo.jpeg' if self.img_path == '../img/kino1.png' else '../img/kino1.png'
-        type = wx.BITMAP_TYPE_PNG if self.img_path == '../img/kino1.png' else wx.BITMAP_TYPE_JPEG
-        self.image.LoadFile(self.img_path, type)
-        my_pic = self.image.ConvertToBitmap()
-        # 显示图片
-        wx.StaticBitmap(self.panel, 1, my_pic, pos=(0, 30))
-        self.SetSize(self.image.GetSize())
+    def next_picture(self, event):
+        self.cur_pic_index = 0 if self.cur_pic_index == len(self.pic_list) - 1 else self.cur_pic_index + 1
+        wx.StaticBitmap(self.panel, 1, self.pic_list[self.cur_pic_index], pos=(0, 30))
+        self.SetSize(self.pic_list[self.cur_pic_index].GetSize())
 
     def test(self, event):
-        path_list = os.listdir('../img')
-        path_list = ['../img/' + path for path in path_list]
-        pic_list = []
-        for path in path_list:
-            self.image.LoadFile(path)
-            pic_list.append(self.image.ConvertToBitmap())
-        self.cur_pic_index = 0 if self.cur_pic_index == len(pic_list) - 1 else self.cur_pic_index + 1
-        wx.StaticBitmap(self.panel, 1, pic_list[self.cur_pic_index], pos=(0, 30))
-        self.SetSize(pic_list[self.cur_pic_index].GetSize())
-        pass
+        self.cur_pic_index = 0 if self.cur_pic_index == len(self.pic_list) - 1 else self.cur_pic_index + 1
+        wx.StaticBitmap(self.panel, 1, self.pic_list[self.cur_pic_index], pos=(0, 30))
+        self.SetSize(self.pic_list[self.cur_pic_index].GetSize())
 
     def random_picture(self, event):
         self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER, self.test, self.timer)
+        self.Bind(wx.EVT_TIMER, self.next_picture, self.timer)
         self.timer.Start(1000)
-        pass
 
     def random_stop(self, event):
         self.timer.Stop()
@@ -73,7 +77,8 @@ class EventFrame(wx.Frame):
 
 def main():
     app = wx.App()
-    ex = EventFrame(None, title='BLAME', style=wx.RESIZE_BORDER | wx.CLOSE_BOX, size=(600, 600), pos=(100, 100))
+    ex = EventFrame(None, title="Tin's favorites", style=wx.RESIZE_BORDER | wx.CLOSE_BOX, size=(600, 600),
+                    pos=(100, 100))
     ex.Show()
     app.MainLoop()
 
