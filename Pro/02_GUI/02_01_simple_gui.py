@@ -57,7 +57,7 @@ def gui_kino():
     # 创建wx.Panel组件,并指定其父容器
     panel = wx.Panel(frm, size=(200, 200), pos=(100, 100))
     # 创建image对象,指定图片路径以及类型
-    image = wx.Image('../img/kino1.png', wx.BITMAP_TYPE_PNG)
+    image = wx.Image('../img/kino.png', wx.BITMAP_TYPE_PNG)
 
     my_pic = image.ConvertToBitmap()
 
