@@ -61,8 +61,7 @@ class Poker:
 
     def __init__(self):
         """实例化52张卡牌"""
-        self.cards = [Card(suite, face) for suite in Suite
-                      for face in range(1, 14)]
+        self.cards = [Card(suite, face) for suite in Suite for face in range(1, 14)]
         """记录当前要发的牌的索引"""
         self.current = 0
         self.shuffle()
