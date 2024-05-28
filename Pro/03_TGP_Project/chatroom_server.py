@@ -33,6 +33,8 @@ class Server(wx.Frame):
         # 聊天内容文本框
         self.text = wx.TextCtrl(self.pl, pos=(10, 60), size=(400, 400), style=wx.TE_READONLY | wx.TE_MULTILINE)
         # 给按钮绑定事件
+        self.Bind(wx.EVT_BUTTON, self.start_server, self.start_btn)
+        self.Bind(wx.EVT_BUTTON, self.save_text, self.save_btn)
 
     def start_server(self, event):
         if not self.isOn:
@@ -45,6 +47,24 @@ class Server(wx.Frame):
             accept_data = client_socket.recv(1024)
             client_name = accept_data.decode('utf8')
             print(client_name)
+            # 创建与客户端保持通信的线程
+            client_thread = ClientThread(client_socket, client_name, self)
+            self.client_thread_dict[client_name] = client_thread
+            self.pool.submit(client_thread.run)
+            self.send(f'[server msg] welcome {client_name}')
+
+    def send(self, text):
+        self.text.AppendText(text + '\n')
+        for client in self.client_thread_dict.values():
+            if client.isOn:
+                encode = text.encode('utf8')
+                client.client_socket.send(encode)
+
+    def save_text(self, event):
+        print('save text')
+        record = self.text.GetValue()
+        with open('record.log', 'a+', encoding='utf-8') as f:
+            f.write(record)
 
 
 class ClientThread(threading.Thread):
@@ -61,6 +81,9 @@ class ClientThread(threading.Thread):
             if text == 'disconnect':
                 self.isOn = False
                 self.server.send(f'[server msg] {self.client_name} quiet')
+            else:
+                self.server.send(f'[{self.client_name}]{text}')
+        self.client_socket.close()
 
 
 def main():
