@@ -22,7 +22,7 @@ class Server(wx.Frame):
         self.pool = ThreadPoolExecutor(max_workers=10)
 
         # 界面布局 调用父类__init__方法设置窗口名,位置,大小
-        wx.Frame.__init__(self, title="Chatroom Server", pos=(0, 50), size=(450, 600))
+        wx.Frame.__init__(self, None, title="Chatroom Server", pos=(0, 50), size=(450, 600))
         # 创建面板
         self.pl = wx.Panel(self)
         # 创建按钮
@@ -33,3 +33,46 @@ class Server(wx.Frame):
         # 聊天内容文本框
         self.text = wx.TextCtrl(self.pl, pos=(10, 60), size=(400, 400), style=wx.TE_READONLY | wx.TE_MULTILINE)
         # 给按钮绑定事件
+
+    def start_server(self, event):
+        if not self.isOn:
+            self.isOn = True
+
+    def main_thread_fun(self):
+        while self.isOn:
+            client_socket, client_addr = self.server_socket.accept()
+            print(client_addr)
+            accept_data = client_socket.recv(1024)
+            client_name = accept_data.decode('utf8')
+            print(client_name)
+
+
+class ClientThread(threading.Thread):
+    def __init__(self, socket, name, server):
+        threading.Thread.__init__(self)
+        self.client_socket = socket
+        self.client_name = name
+        self.server = server
+        self.isOn = True
+
+    def run(self):
+        while self.isOn:
+            text = self.client_socket.recv(1024).decode('utf8')
+            if text == 'disconnect':
+                self.isOn = False
+                self.server.send(f'[server msg] {self.client_name} quiet')
+
+
+def main():
+    # 创建应用程序对象
+    app = wx.App()
+    # 创建服务器窗口
+    server = Server()
+    # 显示服务器窗口
+    server.Show()
+    # 循环显示
+    app.MainLoop()
+
+
+if __name__ == '__main__':
+    main()
