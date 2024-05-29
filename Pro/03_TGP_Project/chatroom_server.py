@@ -39,6 +39,9 @@ class Server(wx.Frame):
     def start_server(self, event):
         if not self.isOn:
             self.isOn = True
+            main_thread = threading.Thread(target=self.main_thread_fun)
+            main_thread.daemon = True
+            main_thread.start()
 
     def main_thread_fun(self):
         while self.isOn:
