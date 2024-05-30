@@ -36,24 +36,38 @@ class Server(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.start_server, self.start_btn)
         self.Bind(wx.EVT_BUTTON, self.save_text, self.save_btn)
 
+    # 开启服务器
     def start_server(self, event):
+        print('start server')
+        # 判断是否处于开启状态(如果已经开启了自然不需要再次开启)
         if not self.isOn:
+            # 将开启状态设置为True
             self.isOn = True
+            # 创建线程 指定执行函数(main_thread_fun)
             main_thread = threading.Thread(target=self.main_thread_fun)
+            # 将线程设置为守护线程
             main_thread.daemon = True
+            # 开启线程
             main_thread.start()
 
+    # 主线执行函数
     def main_thread_fun(self):
         while self.isOn:
+            # 等待客户端连接
             client_socket, client_addr = self.server_socket.accept()
             print(client_addr)
+            # 等待客户端信息(这里会接收客户端连接后发送的第一条消息,即随机生成的客户端名字)
             accept_data = client_socket.recv(1024)
+            # 解码客户端消息
             client_name = accept_data.decode('utf8')
             print(client_name)
             # 创建与客户端保持通信的线程
             client_thread = ClientThread(client_socket, client_name, self)
+            # 将线程放入到线程字典中 (就是记录了一下,这步并不重要)
             self.client_thread_dict[client_name] = client_thread
+            # 执行与客户端通信的线程,并将其提交到线程池中(这步非常关键,是整个项目的最不容易理解的地方,讲到这里的时候要提前画好图)
             self.pool.submit(client_thread.run)
+            # 给客户端发送欢迎消息
             self.send(f'[server msg] welcome {client_name}')
 
     def send(self, text):

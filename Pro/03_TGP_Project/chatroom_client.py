@@ -56,35 +56,51 @@ class Client(wx.Frame):
             self.client_socket.connect(('127.0.0.1', 8999))
             # 发送用户名
             self.client_socket.send(self.name.encode('utf8'))
-            # 实例化一个线程,并执行recv_data
+            # 实例化一个线程,并执行 此处的target函数指的是线程要执行的函数(即recv_data函数)
             main_thread = threading.Thread(target=self.recv_data)
             # 将该线程设置为守护线程
             main_thread.daemon = True
             # 开启该线程
             main_thread.start()
 
+    # 接收数据函数
     def recv_data(self):
         print('recv_data')
+        # 判断如果当前处于连接状态
         while self.isConnected:
+            # 等待接收服务器的消息,并使用utf8字符集解码
             text = self.client_socket.recv(1024).decode('utf8')
+            # 打印解码后的内容
             print(text)
+            # 将接收到的数据添加到聊天记录(文本框)中,并换行
             self.text.AppendText(text + '\n')
 
+    # 断开连接
     def dis_connect(self, event):
         print('dis_conn')
+        # 向服务器发送disconnect (服务器接收到disconnect之后会有一些后置的操作)
         self.client_socket.send('disconnect'.encode('utf8'))
+        # 将当前连接状态改为False(未连接)
         self.isConnected = False
 
+    # 清空输入栏
     def clear(self, event):
         print('clear')
+        # 调用Clear方法清空输入栏
         self.input_text.Clear()
 
+    # 发送
     def send(self, event):
         print('send')
+        # 判断当前是否是已连接的状态(我们会发现在很多操作执行的前提就是必须处于连接状态)
         if self.isConnected:
+            # 获取输入框中输入的内容
             text = self.input_text.GetValue()
+            # 判断输入框的内容是否为空(无法发送空消息)
             if text != '':
+                # 给服务端发送 使用utf8编码后的消息
                 self.client_socket.send(text.encode('utf8'))
+                # 清空输入框(消息发送后自然要清空输入框咯)
                 self.input_text.Clear()
 
 
