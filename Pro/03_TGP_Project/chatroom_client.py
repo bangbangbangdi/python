@@ -33,6 +33,8 @@ class Client(wx.Frame):
         self.text = wx.TextCtrl(self.pl, size=(400, 400), pos=(10, 60), style=wx.TE_READONLY | wx.TE_MULTILINE)
         # 创建输入文本框
         self.input_text = wx.TextCtrl(self.pl, size=(400, 100), pos=(10, 470), style=wx.TE_MULTILINE)
+        # 创建定时器
+        self.timer = wx.Timer(self)
 
         # 为清空按钮绑定相应的函数 - clear
         self.Bind(wx.EVT_BUTTON, self.clear, self.clear_btn)
@@ -42,6 +44,9 @@ class Client(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.dis_connect, self.dis_conn_btn)
         # 为发送按钮绑定相应的函数 - send
         self.Bind(wx.EVT_BUTTON, self.send, self.send_btn)
+        # 绑定定时器
+        self.Bind(wx.EVT_TIMER, self.update_ui, self.timer)
+        self.timer.Start(1000)
 
     # 点击join chatroom会触发该函数 (因为在__init__ 方法中我们将他们绑定到了一起)
     def connect(self, event):
@@ -102,6 +107,9 @@ class Client(wx.Frame):
                 self.client_socket.send(text.encode('utf8'))
                 # 清空输入框(消息发送后自然要清空输入框咯)
                 self.input_text.Clear()
+
+    def update_ui(self, event):
+        self.text.AppendText('')
 
 
 def main():

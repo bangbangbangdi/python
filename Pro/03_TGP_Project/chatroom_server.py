@@ -32,9 +32,15 @@ class Server(wx.Frame):
         self.save_btn = wx.Button(self.pl, pos=(220, 10), size=(200, 40), label='save_chat_history')
         # 聊天内容文本框
         self.text = wx.TextCtrl(self.pl, pos=(10, 60), size=(400, 400), style=wx.TE_READONLY | wx.TE_MULTILINE)
+        # 创建一个空白的标签用于刷新界面
+        # self.label = wx.StaticText(self.pl, pos=(20, 20), label='')
+        # 创建一个Time实例 用于定时刷新界面
+        self.timer = wx.Timer(self)
         # 给按钮绑定事件
         self.Bind(wx.EVT_BUTTON, self.start_server, self.start_btn)
         self.Bind(wx.EVT_BUTTON, self.save_text, self.save_btn)
+        self.Bind(wx.EVT_TIMER, self.update_ui, self.timer)
+        self.timer.Start(1000)
 
     # 开启服务器
     def start_server(self, event):
@@ -82,6 +88,9 @@ class Server(wx.Frame):
         record = self.text.GetValue()
         with open('record.log', 'a+', encoding='utf-8') as f:
             f.write(record)
+
+    def update_ui(self, event):
+        self.text.AppendText('')
 
 
 class ClientThread(threading.Thread):
