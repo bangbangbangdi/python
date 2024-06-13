@@ -7,3 +7,6 @@
 
 > 3.qianfan_model   
 > 这里我们会尝试使用调用百度的千帆AI实现一个最简单的AI聊天程序
+
+> 4.qianfan_gui  
+> 千帆AI + wxPython 实现一个聊天AI的程序

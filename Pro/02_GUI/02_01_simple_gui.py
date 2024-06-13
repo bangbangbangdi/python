@@ -1,4 +1,6 @@
 # -------------------- 界面开发01(wxPython) --------------------
+import random
+
 import wx
 
 # -- wxPython简介 --
@@ -15,6 +17,8 @@ reference from https://github.com/necan/wxPython-tutorial/blob/master
 def first_wx():
     # 创建一个应用程序对象(每一个wxPython程序都必须又一个应用程序对象)
     app = wx.App()
+
+
 
     # 创建了一个wx.Frame对象. wx.Frame是其他组件的父组件,以后我们会经常见到它.
     frm = wx.Frame(None, title='First wxPython application')
