@@ -8,3 +8,8 @@ class QianfanFrame(wx.Frame):
 
     def init_ui(self):
         menubar = wx.MenuBar()
+        self.SetMenuBar(menubar)
+        self.Bind(wx.EVT_MENU, self.on_quit)
+
+    def on_quit(self, event):
+        self.Close()
