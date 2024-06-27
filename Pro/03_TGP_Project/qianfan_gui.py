@@ -2,6 +2,21 @@
 import wx
 
 
+class MyPanel(wx.Panel):
+    def __init__(self, parent):
+        super(MyPanel, self).__init__(parent)
+        self.background_image = wx.Bitmap('../img/kuroniko.jpeg')
+        self.Bind(wx.EVT_PAINT, self.on_paint)
+
+    def on_paint(self, event):
+        dc = wx.PaintDC(self)
+        size = self.GetSize()
+        image = self.background_image.ConvertToImage()
+        image = image.Scale(size.GetWidth(), size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
+        resized_bitmap = wx.Bitmap(image)
+        dc.DrawBitmap(resized_bitmap, 0, 0, False)
+
+
 class QianfanFrame(wx.Frame):
     def __init__(self, *arges, **kwargs):
         super().__init__(*arges, **kwargs)
@@ -16,22 +31,17 @@ class QianfanFrame(wx.Frame):
         # (这里为什么会绑定cmd+Q我也没有查到,只能暂时认为是在不指定绑定的快捷键的情况下默认就绑定的是cmd+Q吧)
         self.Bind(wx.EVT_MENU, self.on_quit)
 
-        self.panel = wx.Panel(self, pos=(100, 100))
+        self.panel = MyPanel(self)
+
         # 设置背景图片
-        pic_bit = wx.Bitmap()
-        pic_bit.LoadFile('../img/kuroniko.jpeg')
-        self.bit_map = wx.StaticBitmap(self.panel, -1, pic_bit, pos=(0, 30))
 
     def on_quit(self, event):
         self.Close(True)
 
-    def test(self, event):
-        print('miemei')
-
 
 def main():
     app = wx.App()
-    ex = QianfanFrame(None, title="chat TGP", style=wx.RESIZE_BORDER | wx.CLOSE_BOX, size=(600, 600),
+    ex = QianfanFrame(None, title="chat TGP", style=wx.RESIZE_BORDER | wx.CLOSE_BOX, size=(600, 500),
                       pos=(100, 100))
     ex.Show()
     app.MainLoop()
