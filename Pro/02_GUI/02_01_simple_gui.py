@@ -18,8 +18,6 @@ def first_wx():
     # 创建一个应用程序对象(每一个wxPython程序都必须又一个应用程序对象)
     app = wx.App()
 
-
-
     # 创建了一个wx.Frame对象. wx.Frame是其他组件的父组件,以后我们会经常见到它.
     frm = wx.Frame(None, title='First wxPython application')
     # 创建了wx.Frame之后,还必须调用Show()方法将其显示在屏幕上.
@@ -65,10 +63,13 @@ def gui_kino():
 
     my_pic = image.ConvertToBitmap()
 
+    bitmap = wx.Bitmap('../img/kino.png')
+
     frm.Center()
 
     # 显示图片
-    wx.StaticBitmap(panel, -1, my_pic)
+    # wx.StaticBitmap(panel, -1, my_pic)
+    wx.StaticBitmap(panel, -1, bitmap)
 
     frm.Show()
 
