@@ -1,5 +1,6 @@
 # -------------------- 使用千帆AI模型 + GUI实现一个AI聊天程序 --------------------
 import wx
+import wx.richtext as rt
 import os
 import qianfan
 
@@ -10,7 +11,10 @@ class MyPanel(wx.Panel):
         self.background_image = wx.Bitmap('../img/kuroniko.jpeg')
         self.Bind(wx.EVT_PAINT, self.on_paint)
         # 创建聊天记录框
-        self.text = wx.TextCtrl(self, size=(450, 300), style=wx.TE_READONLY)
+        # self.text = wx.TextCtrl(self, size=(450, 300), style=wx.TE_READONLY)
+        self.text = rt.RichTextCtrl(self, style=wx.TE_READONLY | wx.VSCROLL | wx.HSCROLL | wx.NO_BORDER | wx.WANTS_CHARS)
+        self.init_text()
+        self.text.SetBackgroundColour(wx.Colour(0, 0, 0, 128))
         # 创建输入文本框 并使其支持回车事件
         self.input_text = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
         # 初始化文本输入框
@@ -29,28 +33,38 @@ class MyPanel(wx.Panel):
         image = image.Scale(size.GetWidth(), size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
         resized_bitmap = wx.Bitmap(image)
         dc.DrawBitmap(resized_bitmap, 0, 0, True)
-        self.text.SetSize(450, size.GetHeight() - 100)
+        self.text.SetSize(150, size.GetHeight() - 100)
+
+    def init_text(self):
+        self.text.BeginParagraphSpacing(0, 20)
+        self.text.BeginAlignment(wx.TEXT_ALIGNMENT_RIGHT)
+        self.text.WriteText('Hello Tin')
+        self.text.EndAlignment()
 
     def init_input_text(self):
         self.input_text.SetMinSize(wx.Size(450, -1))
 
         vbox = wx.BoxSizer(wx.VERTICAL)
 
-        hbox = wx.BoxSizer(wx.HORIZONTAL)
-        hbox.AddStretchSpacer()
-        hbox.Add(self.text, flag=wx.ALIGN_CENTER)
-        hbox.AddStretchSpacer()
+        # hbox = wx.BoxSizer(wx.HORIZONTAL)
+        # hbox.AddStretchSpacer()
+        # hbox.Add(self.text, flag=wx.ALIGN_CENTER)
+        # hbox.AddStretchSpacer()
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         hbox2.AddStretchSpacer()
         hbox2.Add(self.input_text, flag=wx.ALIGN_CENTER)
         hbox2.AddStretchSpacer()
 
-        vbox.Add(hbox, flag=wx.EXPAND | wx.TOP, border=20)
+        # vbox.Add(hbox, flag=wx.EXPAND | wx.TOP, border=20)
+        vbox.Add(self.text, proportion=1, flag=wx.EXPAND | wx.TOP, border=20)
         vbox.AddStretchSpacer()
         vbox.Add(hbox2, flag=wx.EXPAND | wx.BOTTOM, border=20)
 
         self.SetSizer(vbox)
+
+    def show_answer(self, answer):
+        self.text.AppendText(answer + '\n')
 
     def on_enter(self, event):
         # 获取输入框内容
@@ -58,6 +72,7 @@ class MyPanel(wx.Panel):
         print(text)
         # 清空输入框
         self.input_text.Clear()
+        self.show_answer('hello Tin')
         self.chat(text)
 
     def chat(self, question):
