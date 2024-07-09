@@ -12,7 +12,7 @@ class MyPanel(wx.Panel):
         self.Bind(wx.EVT_PAINT, self.on_paint)
         # 创建聊天记录框
         # self.text = wx.TextCtrl(self, size=(450, 300), style=wx.TE_READONLY)
-        self.text = rt.RichTextCtrl(self, style=wx.TE_READONLY | wx.VSCROLL | wx.HSCROLL | wx.NO_BORDER | wx.WANTS_CHARS)
+        self.text = rt.RichTextCtrl(self, size=(450, 300), style=wx.TE_READONLY | wx.VSCROLL | wx.HSCROLL)
         self.init_text()
         self.text.SetBackgroundColour(wx.Colour(0, 0, 0, 128))
         # 创建输入文本框 并使其支持回车事件
@@ -33,12 +33,12 @@ class MyPanel(wx.Panel):
         image = image.Scale(size.GetWidth(), size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
         resized_bitmap = wx.Bitmap(image)
         dc.DrawBitmap(resized_bitmap, 0, 0, True)
-        self.text.SetSize(150, size.GetHeight() - 100)
+        self.text.SetSize(450, size.GetHeight() - 100)
 
     def init_text(self):
         self.text.BeginParagraphSpacing(0, 20)
-        self.text.BeginAlignment(wx.TEXT_ALIGNMENT_RIGHT)
-        self.text.WriteText('Hello Tin')
+        self.text.BeginAlignment(wx.TEXT_ALIGNMENT_LEFT)
+        self.text.WriteText('Hello Tin \n')
         self.text.EndAlignment()
 
     def init_input_text(self):
@@ -46,34 +46,44 @@ class MyPanel(wx.Panel):
 
         vbox = wx.BoxSizer(wx.VERTICAL)
 
-        # hbox = wx.BoxSizer(wx.HORIZONTAL)
-        # hbox.AddStretchSpacer()
-        # hbox.Add(self.text, flag=wx.ALIGN_CENTER)
-        # hbox.AddStretchSpacer()
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        hbox.AddStretchSpacer()
+        hbox.Add(self.text, flag=wx.ALIGN_CENTER)
+        hbox.AddStretchSpacer()
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         hbox2.AddStretchSpacer()
         hbox2.Add(self.input_text, flag=wx.ALIGN_CENTER)
         hbox2.AddStretchSpacer()
 
-        # vbox.Add(hbox, flag=wx.EXPAND | wx.TOP, border=20)
-        vbox.Add(self.text, proportion=1, flag=wx.EXPAND | wx.TOP, border=20)
+        vbox.Add(hbox, flag=wx.EXPAND | wx.TOP, border=20)
+        # vbox.Add(self.text, proportion=1, flag=wx.EXPAND | wx.TOP, border=20)
         vbox.AddStretchSpacer()
         vbox.Add(hbox2, flag=wx.EXPAND | wx.BOTTOM, border=20)
 
         self.SetSizer(vbox)
 
     def show_answer(self, answer):
-        self.text.AppendText(answer + '\n')
+        self.text.BeginParagraphSpacing(0, 20)
+        self.text.BeginAlignment(wx.TEXT_ALIGNMENT_LEFT)
+        self.text.WriteText(f'{answer} \n')
+        self.text.EndAlignment()
+
+    def show_question(self, question):
+        self.text.BeginParagraphSpacing(0, 20)
+        self.text.BeginAlignment(wx.TEXT_ALIGNMENT_RIGHT)
+        self.text.WriteText(f'{question} \n')
+        self.text.EndAlignment()
 
     def on_enter(self, event):
         # 获取输入框内容
         text = self.input_text.GetValue()
+        self.show_question(text)
         print(text)
         # 清空输入框
         self.input_text.Clear()
-        self.show_answer('hello Tin')
-        self.chat(text)
+        res = self.chat(text)
+        self.show_answer(res)
 
     def chat(self, question):
         os.environ["QIANFAN_AK"] = "PvSiq0beNph79ljuFcCqFPsI"
@@ -87,8 +97,10 @@ class MyPanel(wx.Panel):
             endpoint="ernie-char-8k",
             messages=message
         )
-        print(resp.body['result'])
+        res = resp.body['result']
+        print(res)
         message.append({"role": "assistant", "content": resp.body["result"]})
+        return res
 
 
 class QianfanFrame(wx.Frame):
