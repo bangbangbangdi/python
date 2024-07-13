@@ -105,8 +105,8 @@ class Student(Person):
 
 #
 #
-kirii = Teacher('Kirii', 18, 'male','xixi')
-kuroniko = Student('Kuroniko', 13, 'female','piano')
+kirii = Teacher('Kirii', 18, 'male', 'xixi')
+kuroniko = Student('Kuroniko', 13, 'female', 'piano')
 
 kirii.teach('shot')
 kuroniko.study('blowing bubbles')
