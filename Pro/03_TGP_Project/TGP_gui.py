@@ -1,4 +1,7 @@
 # -------------------- 使用千帆AI模型 + GUI实现一个AI聊天程序 --------------------
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
 import wx
 import wx.richtext as rt
 import os
@@ -9,12 +12,15 @@ class MyPanel(wx.Panel):
     def __init__(self, parent):
         super(MyPanel, self).__init__(parent)
         self.background_image = wx.Bitmap('../img/kuroniko.jpeg')
+
         self.Bind(wx.EVT_PAINT, self.on_paint)
         # 创建聊天记录框
         # self.text = wx.TextCtrl(self, size=(450, 300), style=wx.TE_READONLY)
         self.text = rt.RichTextCtrl(self, size=(450, 300), style=wx.TE_READONLY | wx.VSCROLL | wx.HSCROLL)
         self.init_text()
         self.text.SetBackgroundColour(wx.Colour(0, 0, 0, 128))
+        # 滚动条事件
+        self.text.Bind(wx.EVT_SCROLLWIN, self.on_scroll)
         # 创建输入文本框 并使其支持回车事件
         self.input_text = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
         # 初始化文本输入框
@@ -25,15 +31,22 @@ class MyPanel(wx.Panel):
         self.input_text.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
         # 输入框自动获取焦点
         self.input_text.SetFocus()
+        # 创建线程池
+        self.pool = ThreadPoolExecutor(max_workers=2)
 
     def on_paint(self, event):
-        dc = wx.PaintDC(self)
         size = self.GetSize()
+        dc = wx.PaintDC(self)
         image = self.background_image.ConvertToImage()
         image = image.Scale(size.GetWidth(), size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
-        resized_bitmap = wx.Bitmap(image)
-        dc.DrawBitmap(resized_bitmap, 0, 0, True)
+        self.resized_bitmap = wx.Bitmap(image)
+        dc.DrawBitmap(self.resized_bitmap, 0, 0, True)
         self.text.SetSize(450, size.GetHeight() - 100)
+
+    def on_scroll(self, event):
+        dc = wx.PaintDC(self)
+        dc.DrawBitmap(self.resized_bitmap, 0, 0, True)
+        event.Skip()
 
     def init_text(self):
         self.text.BeginParagraphSpacing(0, 20)
@@ -68,6 +81,7 @@ class MyPanel(wx.Panel):
         self.text.BeginAlignment(wx.TEXT_ALIGNMENT_LEFT)
         self.text.WriteText(f'{answer} \n')
         self.text.EndAlignment()
+        self.on_paint(None)
 
     def show_question(self, question):
         self.text.BeginParagraphSpacing(0, 20)
@@ -82,8 +96,14 @@ class MyPanel(wx.Panel):
         print(text)
         # 清空输入框
         self.input_text.Clear()
-        res = self.chat(text)
-        self.show_answer(res)
+        chat_thread = ChatThread(self)
+        self.pool.submit(chat_thread.chat, text)
+
+
+class ChatThread(threading.Thread):
+    def __init__(self, panel):
+        super().__init__()
+        self.panel = panel
 
     def chat(self, question):
         os.environ["QIANFAN_AK"] = "PvSiq0beNph79ljuFcCqFPsI"
@@ -100,7 +120,7 @@ class MyPanel(wx.Panel):
         res = resp.body['result']
         print(res)
         message.append({"role": "assistant", "content": resp.body["result"]})
-        return res
+        wx.CallAfter(self.panel.show_answer, res)
 
 
 class QianfanFrame(wx.Frame):
