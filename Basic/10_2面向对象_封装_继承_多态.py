@@ -21,29 +21,42 @@ def print_random_list(max, size):
 """让我们看看下面的代码有什么问题"""
 
 """声明一个教师类"""
-# class Teacher:
-#     def __init__(self, name, age, gender):
-#         self.name = name
-#         self.age = age
-#         self.gender = gender
-#
-#     def teach(self, course_name):
-#         print(f'{self.name} is teaching {course_name}')
+
+
+class Teacher:
+    def __init__(self, name, age, gender, subject):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.subject = subject
+
+    def eat(self):
+        print(f'{self.name} eating')
+
+    def teach(self, course_name):
+        print(f'{self.name} is teaching {course_name}')
 
 
 """声明一个学生类"""
-# class Student:
-#     def __init__(self, name, age, gender):
-#         self.name = name
-#         self.age = age
-#         self.gender = gender
-#
-#     def study(self, course_name):
-#         print(f'{self.name} is learning {course_name}')
-#
-# kirii = Teacher('Kirii',18,'male')
-# kuroniko = Student('Kuroniko',13,'female')
-#
+
+
+class Student:
+    def __init__(self, name, age, gender, homework):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.homework = homework
+
+    def eat(self):
+        print(f'{self.name} eating')
+
+    def study(self, course_name):
+        print(f'{self.name} is learning {course_name}')
+
+
+kirii = Teacher('Kirii', 18, 'male', 'kill')
+kuroniko = Student('Kuroniko', 13, 'female', 'piano')
+
 # kirii.teach('shot')
 # kuroniko.study('blowing bubbles')
 
@@ -51,50 +64,8 @@ def print_random_list(max, size):
 如果想要消除这部分代码,可以声明Person类,让Student和Teacher继承Person;如下"""
 
 """声明一个Person类"""
-# class Person:
-#     def __init__(self, name, age, gender):
-#         self.name = name
-#         self.age = age
-#         self.gender = gender
-#
-#     def sleep(self):
-#         print(f'{self.name} is sleeping')
-#
-#     def eat(self):
-#         print(f'{self.name} is eating')
 
 
-"""声明一个Teacher类,并继承自Person类"""
-# class Teacher(Person):
-#     def __init__(self, name, age, gender):
-#         super().__init__(name, age, gender)
-#
-#     def teach(self, course_name):
-#         print(f'{self.name} is teaching {course_name}')
-
-
-"""声明一个Student类,并继承自Person类"""
-# class Student(Person):
-#     def __init__(self, name, age, gender):
-#         super().__init__(name, age, gender)
-#
-#     def study(self, course_name):
-#         print(f'{self.name} is learning {course_name}')
-#
-#
-# kirii = Teacher('Kirii', 18, 'male')
-# kuroniko = Student('Kuroniko', 13, 'female')
-#
-# kirii.teach('shot')
-# kuroniko.study('blowing bubbles')
-
-# PS:实际上我们会发现,很多技术诞生的目的都是为了解决代码复用的问题(我们真的非常非常讨厌重复的东西啦..)
-
-# -------------------------------- 多态 --------------------------------
-# 描述:子类通过“重写”父类的方法,从而实现调用相同的方法却做不同的事情
-# 看不懂没关系,我们直接来看代码~
-
-"""声明一个Person类"""
 class Person:
     def __init__(self, name, age, gender):
         self.name = name
@@ -109,6 +80,62 @@ class Person:
 
 
 """声明一个Teacher类,并继承自Person类"""
+
+
+class Teacher(Person):
+    def __init__(self, name, age, gender, subject):
+        super().__init__(name, age, gender)
+        self.subject = subject
+
+    def teach(self, course_name):
+        print(f'{self.name} is teaching {course_name}')
+
+
+"""声明一个Student类,并继承自Person类"""
+
+
+class Student(Person):
+    def __init__(self, name, age, gender, homework):
+        super().__init__(name, age, gender)
+        self.homework = homework
+
+    def study(self, course_name):
+        print(f'{self.name} is learning {course_name}')
+
+
+#
+#
+kirii = Teacher('Kirii', 18, 'male','xixi')
+kuroniko = Student('Kuroniko', 13, 'female','piano')
+
+kirii.teach('shot')
+kuroniko.study('blowing bubbles')
+
+# PS:实际上我们会发现,很多技术诞生的目的都是为了解决代码复用的问题(我们真的非常非常讨厌重复的东西啦..)
+
+# -------------------------------- 多态 --------------------------------
+# 描述:子类通过“重写”父类的方法,从而实现调用相同的方法却做不同的事情
+# 看不懂没关系,我们直接来看代码~
+
+"""声明一个Person类"""
+
+
+class Person:
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+    def sleep(self):
+        print(f'{self.name} is sleeping')
+
+    def eat(self):
+        print(f'{self.name} is eating')
+
+
+"""声明一个Teacher类,并继承自Person类"""
+
+
 class Teacher(Person):
     def __init__(self, name, age, gender):
         super().__init__(name, age, gender)
@@ -117,12 +144,14 @@ class Teacher(Person):
         print(f'{self.name} is teaching {course_name}')
 
     """重写父类的eat方法"""
+
     def eat(self):
         print(f'{self.name} is eating energy bar')
 
 
-
 """声明一个Student类,并继承自Person类"""
+
+
 class Student(Person):
     def __init__(self, name, age, gender):
         super().__init__(name, age, gender)
@@ -131,17 +160,18 @@ class Student(Person):
         print(f'{self.name} is learning {course_name}')
 
     """重写父类的eat方法"""
+
     def eat(self):
         print(f'{self.name} is eating candy floss')
+
 
 kirii = Teacher('Kirii', 18, 'male')
 kuroniko = Student('Kuroniko', 13, 'female')
 
 """因为Teacher和Student都各自重写了eat方法,因此表现为“调用相同的方法,但不同的行为” 即多态"""
-kirii.eat()
-kuroniko.eat()
+# kirii.eat()
+# kuroniko.eat()
 
 """因为sleep方法没有重写,因此用的是Person类中的实现"""
-kirii.sleep()
-kuroniko.sleep()
-
+# kirii.sleep()
+# kuroniko.sleep()
