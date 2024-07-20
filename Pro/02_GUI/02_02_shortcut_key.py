@@ -5,7 +5,7 @@ import wx
 # ------ 菜单 ------
 class MenuExample(wx.Frame):
     '''
-    一个只包含退出功能的菜单栏案例(mac上基本无效... window能正常运行)
+    一个只包含退出功能的菜单栏案例(MacOS中显示会有问题)
     '''
 
     def __init__(self, *args, **kwargs):
@@ -16,17 +16,19 @@ class MenuExample(wx.Frame):
     def init_ui(self):
         # 创建一个 菜单栏 对象
         menubar = wx.MenuBar()
-        # 创建一个 菜单 对象(放在菜单栏中)
+        # 创建一个菜单
         file_menu = wx.Menu()
 
-        # 在 菜单 对象中追加 菜单项(放在菜单中)
-        file_item = file_menu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
-        # 将 菜单 对象,放入 菜单栏 中
-        menubar.Append(file_menu, '&File')
+        # 创建一个菜单项,分配快捷键 command + Q
+        quit_item = wx.MenuItem(file_menu, wx.ID_EXIT, '&Quit', 'Quit application')
+
+        # 将菜单添加到菜单栏对象
+        menubar.Append(file_menu, 'File')
+
         # 设置菜单栏
         self.SetMenuBar(menubar)
-        # 将菜单退出事件绑定器(即快捷键command + Q) 绑定到on_quit方法
-        self.Bind(wx.EVT_MENU, self.on_quit, file_item)
+        # 将quit_item菜单项和self.on_quit方法绑定
+        self.Bind(wx.EVT_MENU, self.on_quit, quit_item)
 
         self.SetSize((300, 200))
         self.SetTitle('Simple Menu')
