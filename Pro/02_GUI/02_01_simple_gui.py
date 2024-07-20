@@ -30,8 +30,7 @@ def first_wx():
 def about_frame():
     app = wx.App()
     # construct 构造函数
-    frm = wx.Frame(None, title='这是标题参数', size=(500, 200), pos=(300, 300),
-                   style=wx.MINIMIZE_BOX | wx.RESIZE_BORDER | wx.CLOSE_BOX)
+    frm = wx.Frame(None, title='这是标题参数', size=(500, 200), pos=(300, 300), style=wx.MINIMIZE_BOX | wx.RESIZE_BORDER | wx.CLOSE_BOX)
 
     # style
     '''
