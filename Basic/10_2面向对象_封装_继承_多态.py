@@ -169,9 +169,9 @@ kirii = Teacher('Kirii', 18, 'male')
 kuroniko = Student('Kuroniko', 13, 'female')
 
 """因为Teacher和Student都各自重写了eat方法,因此表现为“调用相同的方法,但不同的行为” 即多态"""
-# kirii.eat()
-# kuroniko.eat()
+kirii.eat()
+kuroniko.eat()
 
 """因为sleep方法没有重写,因此用的是Person类中的实现"""
-# kirii.sleep()
-# kuroniko.sleep()
+kirii.sleep()
+kuroniko.sleep()

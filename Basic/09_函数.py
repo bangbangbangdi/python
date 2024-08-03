@@ -157,10 +157,74 @@ from random import randint
 
 
 # def test2():
-    # global global_var
-    # global_var = 'change'
+# global global_var
+# global_var = 'change'
 #     print('我能访问到全局变量嘛?', global_var)
 #
 #
 # test2()
 # print('在函数外还能访问到嘛?', global_var)
+
+
+# ----------------------------- 20240803 -----------------------------------
+# ----------------------------- 函数参数 -----------------------------------
+
+# 1.位置参数(普通参数)
+def param(name, age, gender, height, weight):
+    print(name, age, gender, height, weight)
+
+
+param('Kino', 16, 'female', 160, 110)
+
+
+# 2.*args参数
+# - *args:允许函数接受任意数量的位置参数
+# - 这些参数会存储在一个元祖中.(简单回忆一下元祖)
+# - 在函数内部,可以像处理元组一样处理*args
+# - 如果不确定调用者会传递多少个位置参数,可以使用*args
+def param2(*args):
+    print(args)
+    # print(type(args))
+
+
+param2('Kino', 16, 'female', 160, 110)
+
+
+# 3.**kwargs参数
+# - **kwargs:允许函数接受任意数量的关键字参数,并将这些参数存储在一个字典中.(简单回忆一下字典)
+#  - 在函数内部,可以像处理字典一样处理**kwargs
+#  - 如果不确定调用者会传递多少个位置参数,可以使用**kwargs
+def param3(**kwargs):
+    print(kwargs)
+    print(kwargs['name'])
+
+
+param3(name='Kino', age=20, gender='male')
+
+
+# 一起使用时的顺序
+#  1. 位置参数
+#  2. *args
+#  3. **kwargs
+def param4(name, age, *args, **kwargs):
+    print(name, age)
+    print(args)
+    print(kwargs)
+
+
+# 一个栗子
+class Person:
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+
+class Student(Person):
+    def __init__(self, id, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.id = id
+
+
+s = Student(123, 'kino', 10, gender='female')
+print(s.name, s.age, s.gender)
