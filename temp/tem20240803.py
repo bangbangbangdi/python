@@ -23,6 +23,15 @@ param('Kino', 16, 'female', 160, 110)
 # 2.将这四个参数相加的结果打印出来
 # 例如 add3(1,2,3,4,5,6,7,8) -> 打印 36
 
+def add3(*args):
+    print(type(args))
+    print(*args)
+
+    print(args)
+
+
+add3(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
 
 # 想想一下有下面这样的函数
 def param3(name=None, age=None, gender=None, height=None, weight=None, favorite=None, partner=None):
@@ -30,3 +39,55 @@ def param3(name=None, age=None, gender=None, height=None, weight=None, favorite=
 
 
 # 现在我只知道该要打印的信息有 名字叫kino 年龄16岁 伙伴是erms;
+param3('Kino', 16, partner='erms')
+
+
+def param(*args):
+    print(args)
+
+
+param(10, 20, 35)
+
+
+def param2(**kwargs):
+    print(type(kwargs))
+    print(kwargs['name'])
+    for key, value in kwargs.items():
+        print(key, value)
+    print(kwargs)
+
+
+param2(name='Kino', age=16)
+
+
+class Person:
+
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+
+class Student(Person):
+
+    def __init__(self, id, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.id = id
+
+    def show(self):
+        print(self.id, self.name, self.age, self.gender)
+
+
+stu = Student(123, 'Kino', 16, gender='female')
+
+
+# stu.show()
+
+def param3(*args, **kwargs):
+    print(*args)
+    print(args)
+    # print(**kwargs)
+    print(kwargs)
+
+
+param3(1, 2, 3, 4, a=5, b=6, c=7)

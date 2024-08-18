@@ -223,8 +223,24 @@ class Person:
 class Student(Person):
     def __init__(self, id, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # super().__init__(*args, **kwargs)
         self.id = id
 
+    def show(self):
+        print(self.id, self.name, self.age, self.gender)
+
+    def add(self):
+        print('nihao ')
+
+
+def add():
+    print('xxx')
+
+
+add()
 
 s = Student(123, 'kino', 10, gender='female')
+s2 = Student(456, 'kiri', 40, gender='male')
 print(s.name, s.age, s.gender)
+s.show()
+s.add()

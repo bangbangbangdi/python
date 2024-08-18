@@ -17,7 +17,7 @@ class EventFrame(wx.Frame):
         self.SetMenuBar(menubar)
         self.Bind(wx.EVT_MENU, self.on_quit)
         # 创建wx.Panel组件,并指定其父容器
-        self.panel = wx.Panel(self, pos=(100, 100))
+        self.panel = wx.Panel(self)
 
         # 显示图片
         self.cur_pic_index = 0
@@ -25,15 +25,11 @@ class EventFrame(wx.Frame):
 
         self.bit_map = wx.StaticBitmap(self.panel, -1, cur_pic, pos=(0, 30))
         change_btn = wx.Button(self.panel, label='Next Picture')
-        random_btn = wx.Button(self.panel, label='Carousel', pos=(200, 4))
+        carousel_btn = wx.Button(self.panel, label='Carousel', pos=(200, 4))
         stop_btn = wx.Button(self.panel, label='Stop Carousel', pos=(400, 4))
-        # test_btn = wx.Button(self.panel, label='test', pos=(600, 4))
-        change_btn.Show()
-        # test_btn.Show()
         self.Bind(wx.EVT_BUTTON, self.next_picture, change_btn)
-        # self.Bind(wx.EVT_BUTTON, self.test, test_btn)
-        self.Bind(wx.EVT_BUTTON, self.random_picture, random_btn)
-        self.Bind(wx.EVT_BUTTON, self.random_stop, stop_btn)
+        self.Bind(wx.EVT_BUTTON, self.carousel_start, carousel_btn)
+        self.Bind(wx.EVT_BUTTON, self.carousel_stop, stop_btn)
 
         # 设置文本框
         self.staticText = wx.StaticText(self.panel, label=cur_pic.saying, pos=(0, 50), size=cur_pic.GetSize(),
@@ -75,15 +71,12 @@ class EventFrame(wx.Frame):
         self.staticText.SetSize(cur_pic.GetSize())
         self.SetSize(self.pic_list[self.cur_pic_index].GetSize())
 
-    def test(self, event):
-        pass
-
-    def random_picture(self, event):
+    def carousel_start(self, event):
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.next_picture, self.timer)
         self.timer.Start(2000)
 
-    def random_stop(self, event):
+    def carousel_stop(self, event):
         self.timer.Stop()
 
 
