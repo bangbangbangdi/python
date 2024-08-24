@@ -6,8 +6,11 @@ import os
 class EventFrame(wx.Frame):
     def __init__(self, *arges, **kwargs):
         super(EventFrame, self).__init__(*arges, **kwargs)
+        # 加载对话
         self.load_saying()
+        # 加载图片
         self.load_picture()
+        # 初始化整个界面
         self.init_ui()
 
     def init_ui(self):
@@ -41,17 +44,20 @@ class EventFrame(wx.Frame):
         self.SetSize(cur_pic.GetSize())
 
     def load_picture(self):
+        # 1.初始化pic_list列表;将指定路径下的图片转为Bitmap格式并放入列表中
+        # 2.为bitmap对象添加一个saying属性,里面是对应人物的台词
         path_list = os.listdir('../img')
         path_list = ['../img/' + path for path in path_list]
         self.pic_list = []
         for path in path_list:
             bit_map = wx.Bitmap()
             bit_map.LoadFile(path)
+            self.pic_list.append(bit_map)
             saying_key = path[7:].split('.')[0]
             bit_map.saying = self.saying_dic[saying_key]
-            self.pic_list.append(bit_map)
 
     def load_saying(self):
+        # 将每个人物和对应的名台词放进字典中
         self.saying_dic = {}
         self.saying_dic['kino'] = '''撃つ時は、躊躇わないこと。相手が食べられる動物でも、食べられない動物でもです。
         どんな時でも、他の生き物ではなく、自分が生き残ることを最優先にしてください。……死人は、ペンを持ちません'''
@@ -69,7 +75,7 @@ class EventFrame(wx.Frame):
         self.staticText.SetLabelText(cur_pic.saying)
         self.bit_map.SetBitmap(cur_pic)
         self.staticText.SetSize(cur_pic.GetSize())
-        self.SetSize(self.pic_list[self.cur_pic_index].GetSize())
+        self.SetSize(cur_pic.GetSize())
 
     def carousel_start(self, event):
         self.timer = wx.Timer(self)

@@ -1,3 +1,5 @@
+import os
+
 # 列表生成式
 
 # -------------- 栗子: 不带条件的列表生成式 --------------
@@ -12,10 +14,18 @@ print(squares)
 # 生成10到20到立方
 
 # 练习2
-# 将字符串Tin拆分为 单个字符  Tin -> 'T','i','n'
+# 将字符串Tin拆分为 单个字符  Tin -> 'T','i','n' (提示:字符串本身也是可遍历的对象)
 
 # 练习3
 # 将字符串Tin拆分为单个字符到基础上左右添加 -  ; Tin -> '-T-','-i-','-n-'
+
+# 练习4
+# 已知函数os.listdir() 能获取指定路径下的所有文件名
+# 例如 os.listdir('../img') -> ['lain.jpeg', 'cibo.jpeg', 'erms.jpeg', 'kuroniko.jpeg', 'kino.png']
+# 现在需要将列表内的文件名转为相对路径
+# 例如 ['lain.jpeg', 'cibo.jpeg', 'erms.jpeg', 'kuroniko.jpeg', 'kino.png'] -> ['../img/lain.jpeg', '../img/cibo.jpeg', '../img/erms.jpeg', '../img/kuroniko.jpeg', '../img/kino.png']
+li = os.listdir('../img')
+print(li)
 
 # -------------- 栗子: 带条件的列表生成式 --------------
 # 生成偶数的平方
