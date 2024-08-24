@@ -11,12 +11,22 @@ param('Kino', 16, 'female', 160, 110)
 # 2.将这四个参数相加的结果打印出来
 # 例如 add(1,2,3,4) -> 打印 10
 
+def add(a, b, c, d):
+    print(a+b+c+d)
+
+add(1, 2, 3, 4)
+
 
 # 现在需求调整为了如下:
 # 1.接受最多四个参数
 # 2.将这四个参数相加的结果打印出来
 # 例如 add2() -> 打印0 ; add2(1,2) -> 打印 3; add2(1,2,3) -> 打印 6; add2(1,2,3,4) -> 打印 10
 
+def add2(a=0, b=0, c=0, d=0):
+    print(a+b+c+d)
+add2(1,0, 3)
+
+print('==========')
 
 # 需求又调整啦:
 # 1.接受任意多个参数
@@ -32,6 +42,19 @@ def add3(*args):
 
 add3(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
+def add3(*args):
+    # print(type(args))
+    # print(args[0],args[1],args[2])
+    # print(args)
+
+    res = 0
+    for i in args:
+        res += i
+    print(res)
+
+
+add3(1, 2, 5,7,8)
+
 
 # 想想一下有下面这样的函数
 def param3(name=None, age=None, gender=None, height=None, weight=None, favorite=None, partner=None):
@@ -39,6 +62,28 @@ def param3(name=None, age=None, gender=None, height=None, weight=None, favorite=
 
 
 # 现在我只知道该要打印的信息有 名字叫kino 年龄16岁 伙伴是erms;
+
+
+class Person():
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+class Teacher(Person):
+    # def __init__(self, classroom, name, age, gender):
+    #     self.classroom = classroom
+    #     super().__init__(name, age, gender)
+
+    def __init__(self, classroom, *args, **kwargs):
+        self.classroom = classroom
+        super().__init__(*args, **kwargs)
+
+    def show(self):
+        print(self.classroom, self.name,self.age, self.gender)
+
+Bang = Teacher(3,'bang', age=27, gender='male')
+Bang.show()
 param3('Kino', 16, partner='erms')
 
 
